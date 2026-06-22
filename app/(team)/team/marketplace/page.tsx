@@ -1,3 +1,3 @@
-﻿export default function Page() {
-  return <main>Team Marketplace Page</main>;
+export default function Page() {
+  return <main>Team Marketplace Management Page</main>;
 }
