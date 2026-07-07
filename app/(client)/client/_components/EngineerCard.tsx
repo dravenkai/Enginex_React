@@ -1,4 +1,8 @@
+import Image from "next/image";
+import Link from "next/link";
+
 interface EngineerCardProps {
+  slug: string;
   name: string;
   role: string;
   avatar: string;
@@ -6,16 +10,17 @@ interface EngineerCardProps {
 }
 
 export default function EngineerCard({
+  slug,
   name,
   role,
   avatar,
   tags,
 }: EngineerCardProps) {
   return (
-    <div className="bg-white border-4 border-black p-5 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] flex flex-col min-w-[240px]">
+    <article className="bg-white border-4 border-black p-5 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] flex flex-col min-w-[240px]">
       <div className="flex items-center gap-4 mb-4">
-        <div className="w-16 h-16 border-2 border-black overflow-hidden bg-orange-100">
-          <img src={avatar} alt={name} className="w-full h-full object-cover" />
+        <div className="w-16 h-16 border-2 border-black overflow-hidden bg-orange-100 relative">
+          <Image src={avatar} alt={name} fill className="object-cover" />
         </div>
         <div>
           <h4 className="font-bold text-lg leading-tight">{name}</h4>
@@ -34,9 +39,12 @@ export default function EngineerCard({
         ))}
       </div>
 
-      <button className="w-full py-2 bg-[#93c5fd] border-2 border-black font-bold text-xs uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all">
+      <Link
+        href={`/client/marketplace/${slug}`}
+        className="w-full py-2 bg-[#93c5fd] border-2 border-black font-bold text-xs uppercase text-center shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all"
+      >
         View Profile
-      </button>
-    </div>
+      </Link>
+    </article>
   );
 }

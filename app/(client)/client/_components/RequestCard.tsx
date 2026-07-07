@@ -1,4 +1,5 @@
-import { MessageSquare, Settings, CheckCircle2 } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 
 interface RequestCardProps {
   id: string;
@@ -26,7 +27,7 @@ export default function RequestCard({
   actionLabel,
 }: RequestCardProps) {
   return (
-    <div className="bg-white border-4 border-black p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] flex flex-col h-full">
+    <article className="bg-white border-4 border-black p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] flex flex-col h-full">
       <div className="flex justify-between items-start mb-4">
         <span
           className={`${statusColors[status]} border-2 border-black px-2 py-0.5 text-[10px] font-bold`}
@@ -43,11 +44,12 @@ export default function RequestCard({
         <div className="flex items-center gap-2">
           {engineerAvatar ? (
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 border-2 border-black overflow-hidden">
-                <img
+              <div className="w-8 h-8 border-2 border-black overflow-hidden relative">
+                <Image
                   src={engineerAvatar}
-                  alt={engineerName}
-                  className="w-full h-full object-cover"
+                  alt={engineerName ?? ""}
+                  fill
+                  className="object-cover"
                 />
               </div>
               <span className="text-xs font-bold">{engineerName}</span>
@@ -66,10 +68,13 @@ export default function RequestCard({
           )}
         </div>
 
-        <button className="text-xs font-bold text-blue-600 hover:underline uppercase tracking-tighter">
+        <Link
+          href={`/client/dashboard/requests/${id}`}
+          className="text-xs font-bold text-blue-600 hover:underline uppercase tracking-tighter"
+        >
           {actionLabel}
-        </button>
+        </Link>
       </div>
-    </div>
+    </article>
   );
 }

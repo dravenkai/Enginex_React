@@ -1,6 +1,7 @@
 "use client";
 
-import { Search, Bell, User } from "lucide-react";
+import Image from "next/image";
+import { Search, Bell } from "lucide-react";
 
 export default function Header() {
   return (
@@ -20,12 +21,12 @@ export default function Header() {
         <button className="p-2 hover:bg-gray-100 transition-colors">
           <Bell className="w-6 h-6" />
         </button>
-        <div className="w-10 h-10 border-2 border-black overflow-hidden bg-blue-200">
-          {/* Placeholder for user avatar */}
-          <img
+        <div className="w-10 h-10 border-2 border-black overflow-hidden bg-blue-200 relative">
+          <Image
             src="https://api.dicebear.com/7.x/avataaars/svg?seed=Khant"
-            alt="User"
-            className="w-full h-full object-cover"
+            alt="User avatar"
+            fill
+            className="object-cover"
           />
         </div>
       </div>

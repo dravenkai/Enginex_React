@@ -74,30 +74,35 @@ export default function Page() {
         </div>
         <div className="flex gap-8 overflow-x-auto pb-4 scrollbar-hide">
           <EngineerCard
+            slug="pai-min-thway-1"
             name="Pai Min Thway"
             role="Civil Engineer"
             avatar="https://api.dicebear.com/7.x/pixel-art/svg?seed=Pai"
             tags={["KUBERNETES", "TERRAFORM", "GO"]}
           />
           <EngineerCard
+            slug="chaint-chaint-chan-1"
             name="Chaint Chaint Chan"
             role="Architect"
             avatar="https://api.dicebear.com/7.x/pixel-art/svg?seed=Chaint"
             tags={["Archi", "Draw", "Build"]}
           />
           <EngineerCard
+            slug="pai-min-thway-2"
             name="Pai Min Thway"
             role="Civil Engineer"
             avatar="https://api.dicebear.com/7.x/pixel-art/svg?seed=Pai2"
             tags={["KUBERNETES", "TERRAFORM", "GO"]}
           />
           <EngineerCard
+            slug="chaint-chaint-chan-2"
             name="Chaint Chaint Chan"
             role="Architect"
             avatar="https://api.dicebear.com/7.x/pixel-art/svg?seed=Chaint2"
             tags={["Archi", "Draw", "Build"]}
           />
           <EngineerCard
+            slug="pai-min-thway-3"
             name="Pai Min Thway"
             role="Civil Engineer"
             avatar="https://api.dicebear.com/7.x/pixel-art/svg?seed=Pai3"
