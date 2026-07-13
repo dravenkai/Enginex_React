@@ -1,7 +1,7 @@
-﻿export default function RouteGroupLayout({
+export default function ClientLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return children;
 }

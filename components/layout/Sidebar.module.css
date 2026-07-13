@@ -1,0 +1,133 @@
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 50;
+  width: 256px;
+  height: 1117px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  background: #f9f9f9;
+  border-right: 4px solid #1a1c1c;
+  color: #252525;
+  font-family: "Courier New", Courier, monospace;
+}
+
+.brand {
+  height: 96px;
+  flex: 0 0 96px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 22px;
+  box-sizing: border-box;
+  border-bottom: 2px solid #171717;
+}
+
+.logo {
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+}
+
+.brandText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.brandText strong {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.brandText span {
+  color: #666666;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+}
+
+.navigation {
+  padding: 48px 10px 16px;
+}
+
+.menuList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.menuItem {
+  width: 100%;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 18px;
+  box-sizing: border-box;
+  border: 2px solid transparent;
+  color: #555b61;
+  background: transparent;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 120ms ease, color 120ms ease;
+}
+
+.menuItem:hover {
+  color: #171717;
+  background: #eeeeee;
+}
+
+.menuItem:focus-visible,
+.newRequestButton:focus-visible {
+  outline: 3px solid #269fe4;
+  outline-offset: 2px;
+}
+
+.menuItem.active {
+  color: #163c77;
+  background: #7da6f7;
+  border-color: #171717;
+  box-shadow: 4px 4px 0 #171717;
+}
+
+.newRequestButton {
+  position: fixed;
+  bottom: 22px;
+  left: 20px;
+  z-index: 51;
+  width: calc(100% - 40px);
+  max-width: 216px;
+  height: 42px;
+  flex: 0 0 42px;
+  margin: 0;
+  border: 2px solid #171717;
+  color: #171717;
+  background: #ffe47c;
+  box-shadow: 3px 3px 0 #171717;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.newRequestButton:hover {
+  background: #ffdc53;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menuItem {
+    transition: none;
+  }
+}
