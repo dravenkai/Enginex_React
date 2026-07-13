@@ -1,3 +1,3 @@
-﻿export default function Page() {
-  return <main>Admin Marketplace Page</main>;
+export default function Page() {
+  return <main>Admin Marketplace Moderation Page</main>;
 }
