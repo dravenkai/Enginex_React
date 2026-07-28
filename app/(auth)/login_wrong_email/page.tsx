@@ -2,16 +2,12 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import type { FormEvent } from "react";
-import styles from "./login.module.css";
-import { Icon, Logo } from "./visuals";
+import { Icon, Logo } from "../login/visuals";
+import styles from "../login/login.module.css";
+import errorStyles from "./wrong-email.module.css";
 
-export default function LoginPage() {
+export default function WrongEmailLoginPage() {
   const [showPassword, setShowPassword] = useState(false);
-
-  function login(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-  }
 
   return (
     <main className={styles.page}>
@@ -22,18 +18,42 @@ export default function LoginPage() {
           <h2>Welcome Back!</h2>
           <p className={styles.subtitle}>Log in to access your engineering hub.</p>
 
-          <form onSubmit={login}>
+          <form onSubmit={(event) => event.preventDefault()} noValidate>
             <label htmlFor="email">EMAIL ADDRESS</label>
             <div className={styles.inputBox}>
               <Icon type="mail" />
-              <input id="email" name="email" type="email" placeholder="Enter Email Address" autoComplete="email" required />
+              <input
+                id="email"
+                name="email"
+                type="email"
+                placeholder="Enter Email Address"
+                autoComplete="email"
+                aria-invalid="true"
+                aria-describedby="email-error"
+              />
+            </div>
+
+            <div id="email-error" className={errorStyles.error} role="alert">
+              <span aria-hidden="true">!</span>
+              Invalid email. Please try again.
             </div>
 
             <label htmlFor="password">PASSWORD</label>
             <div className={styles.inputBox}>
               <Icon type="lock" />
-              <input id="password" name="password" type={showPassword ? "text" : "password"} placeholder="Enter Password" autoComplete="current-password" required />
-              <button type="button" className={styles.eye} onClick={() => setShowPassword(!showPassword)} aria-label={showPassword ? "Hide password" : "Show password"}>
+              <input
+                id="password"
+                name="password"
+                type={showPassword ? "text" : "password"}
+                placeholder="Enter Password"
+                autoComplete="current-password"
+              />
+              <button
+                type="button"
+                className={styles.eye}
+                onClick={() => setShowPassword((visible) => !visible)}
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
                 <Icon type="eye" />
               </button>
             </div>
@@ -55,7 +75,10 @@ export default function LoginPage() {
         <div className={styles.circle}/>
         <div className={styles.speed}><i/><i/><i/></div>
         <div className={`${styles.card} ${styles.pros}`}>
-          <div className={styles.row}><div className={styles.cardIcon}><Icon type="shield" /></div><div><h3>Verified Pros</h3><p>TU-Certified</p></div></div>
+          <div className={styles.row}>
+            <div className={styles.cardIcon}><Icon type="shield" /></div>
+            <div><h3>Verified Pros</h3><p>TU-Certified</p></div>
+          </div>
           <strong>1,247+</strong>
         </div>
         <div className={`${styles.card} ${styles.team}`}>
