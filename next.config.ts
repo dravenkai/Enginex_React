@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   output: "standalone",
+<<<<<<< HEAD
   images: {
     remotePatterns: [
       {
@@ -10,6 +11,10 @@ const nextConfig: NextConfig = {
         pathname: "/**",
       },
     ],
+=======
+  turbopack: {
+    root: process.cwd(),
+>>>>>>> origin/Sandakue
   },
 };
 

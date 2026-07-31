@@ -1,10 +1,15 @@
+<<<<<<< HEAD
 ﻿﻿import Sidebar from "./client/_components/Sidebar";
 import Header from "./client/_components/Header";
 
 export default function RouteGroupLayout({
+=======
+export default function ClientLayout({
+>>>>>>> origin/Sandakue
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
+<<<<<<< HEAD
 }>) {
   return (
     <div className="flex min-h-screen bg-[#f3f4f6]">
@@ -15,4 +20,8 @@ export default function RouteGroupLayout({
       </div>
     </div>
   );
+=======
+}) {
+  return children;
+>>>>>>> origin/Sandakue
 }
