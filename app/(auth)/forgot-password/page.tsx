@@ -21,7 +21,7 @@ export default function ForgotPasswordPage() {
       return;
     }
 
-    router.push(`/forgot-password/sent?email=${encodeURIComponent(email)}`);
+    router.push(`/forgot-password/check-ur-email?email=${encodeURIComponent(email)}`);
   }
 
   return (
@@ -45,7 +45,7 @@ export default function ForgotPasswordPage() {
                 type="email"
                 value={email}
                 onChange={(event) => { setEmail(event.target.value); setError(false); }}
-                placeholder="uxryor@gmail.com"
+                placeholder="your.email@example.com"
                 autoComplete="email"
                 aria-describedby={error ? "email-error" : undefined}
                 aria-invalid={error}
