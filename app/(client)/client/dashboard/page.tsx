@@ -25,7 +25,7 @@ export default function Page() {
       <section>
         <div className="flex items-center gap-2 mb-6">
           <List className="w-5 h-5 text-blue-700" />
-          <h2 className="text-xl font-bold">Active Requests</h2>
+          <h2 className="text-xl">Active Requests</h2>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           <RequestCard
@@ -33,6 +33,7 @@ export default function Page() {
             title="Cloud Migration Strategy"
             status="MATCHING"
             description="Azure to AWS transition for high-traffic e-commerce..."
+            pendingCount={5}
             actionLabel="MANAGE"
           />
           <RequestCard
@@ -61,7 +62,7 @@ export default function Page() {
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-2">
             <Star className="w-5 h-5 text-blue-700 fill-blue-700" />
-            <h2 className="text-xl font-bold">Recommended Engineers</h2>
+            <h2 className="text-xl font-normal">Recommended Engineers</h2>
           </div>
           <div className="flex gap-2">
             <button className="p-1 border-2 border-black bg-white hover:bg-gray-100 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
@@ -72,40 +73,40 @@ export default function Page() {
             </button>
           </div>
         </div>
-        <div className="flex gap-8 overflow-x-auto pb-4 scrollbar-hide">
+        <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
           <EngineerCard
-            slug="pai-min-thway-1"
+            slug="pai-min-thway"
             name="Pai Min Thway"
             role="Civil Engineer"
-            avatar="https://api.dicebear.com/7.x/pixel-art/svg?seed=Pai"
+            avatar="/profile.avif"
             tags={["KUBERNETES", "TERRAFORM", "GO"]}
           />
           <EngineerCard
-            slug="chaint-chaint-chan-1"
+            slug="chaint-chaint-chan"
             name="Chaint Chaint Chan"
             role="Architect"
-            avatar="https://api.dicebear.com/7.x/pixel-art/svg?seed=Chaint"
-            tags={["Archi", "Draw", "Build"]}
+            avatar="/profile.avif"
+            tags={["Archi", "Draw", "Build"]} 
           />
           <EngineerCard
-            slug="pai-min-thway-2"
-            name="Pai Min Thway"
+            slug="Than Tun"
+            name="Than Tun"
             role="Civil Engineer"
-            avatar="https://api.dicebear.com/7.x/pixel-art/svg?seed=Pai2"
+            avatar="/profile.avif"
             tags={["KUBERNETES", "TERRAFORM", "GO"]}
           />
           <EngineerCard
-            slug="chaint-chaint-chan-2"
-            name="Chaint Chaint Chan"
+            slug="Kaung Myat"
+            name="Kaung Myat"
             role="Architect"
-            avatar="https://api.dicebear.com/7.x/pixel-art/svg?seed=Chaint2"
+            avatar="/profile.avif"
             tags={["Archi", "Draw", "Build"]}
           />
           <EngineerCard
-            slug="pai-min-thway-3"
-            name="Pai Min Thway"
+            slug="Nyar Nyar"
+            name="Nyar Nyar"
             role="Civil Engineer"
-            avatar="https://api.dicebear.com/7.x/pixel-art/svg?seed=Pai3"
+            avatar="/profile.avif"
             tags={["KUBERNETES", "TERRAFORM", "GO"]}
           />
         </div>

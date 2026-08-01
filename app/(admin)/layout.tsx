@@ -1,7 +1,9 @@
-﻿export default function RouteGroupLayout({
+﻿import AppShell from "@/components/layout/AppShell";
+
+export default function RouteGroupLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return children;
+  return <AppShell>{children}</AppShell>;
 }

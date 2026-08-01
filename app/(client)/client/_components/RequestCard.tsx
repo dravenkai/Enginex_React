@@ -8,13 +8,14 @@ interface RequestCardProps {
   description: string;
   engineerAvatar?: string;
   engineerName?: string;
+  pendingCount?: number;
   actionLabel: "MANAGE" | "MESSAGE" | "APPROVE";
 }
 
 const statusColors = {
-  MATCHING: "bg-[#fef08a]",
-  "IN PROGRESS": "bg-[#fdba74]",
-  "FINAL REVIEW": "bg-[#93c5fd]",
+  MATCHING: "bg-[#fef08a] text-black",
+  "IN PROGRESS": "bg-[#f2784a] text-white",
+  "FINAL REVIEW": "bg-[#93c5fd] text-black",
 };
 
 export default function RequestCard({
@@ -24,6 +25,7 @@ export default function RequestCard({
   description,
   engineerAvatar,
   engineerName,
+  pendingCount,
   actionLabel,
 }: RequestCardProps) {
   return (
@@ -49,21 +51,18 @@ export default function RequestCard({
                   src={engineerAvatar}
                   alt={engineerName ?? ""}
                   fill
+                  unoptimized
                   className="object-cover"
                 />
               </div>
               <span className="text-xs font-bold">{engineerName}</span>
             </div>
           ) : (
-            <div className="flex -space-x-2">
-              {[1, 2, 3].map((i) => (
-                <div
-                  key={i}
-                  className="w-8 h-8 border-2 border-black bg-gray-200 rounded-full flex items-center justify-center text-[10px] font-bold"
-                >
-                  +{i + 2}
-                </div>
-              ))}
+            <div className="flex items-center -space-x-2">
+              <div className="w-8 h-8 border-2 border-black bg-zinc-800 rounded-full" />
+              <div className="w-8 h-8 border-2 border-black bg-white rounded-full flex items-center justify-center text-[10px] font-bold">
+                +{pendingCount ?? 0}
+              </div>
             </div>
           )}
         </div>

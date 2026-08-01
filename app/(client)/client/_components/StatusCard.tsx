@@ -6,10 +6,10 @@ export default function StatusCard() {
       <div className="bg-black text-white p-3 rounded-full mb-4">
         <Gauge className="w-8 h-8" />
       </div>
-      <span className="text-xs font-bold uppercase tracking-widest mb-1">
+      <span className="text-md font-medium uppercase tracking-widest mb-1">
         System Status
       </span>
-      <h2 className="text-xl font-black uppercase">Optimized</h2>
+      <span className="text-base font-medium uppercase">Optimized</span>
     </div>
   );
 }

@@ -17,22 +17,22 @@ export default function EngineerCard({
   tags,
 }: EngineerCardProps) {
   return (
-    <article className="bg-white border-4 border-black p-5 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] flex flex-col min-w-[240px]">
+    <article className="bg-white border-4 border-black p-5 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex flex-col min-w-[255px]">
       <div className="flex items-center gap-4 mb-4">
-        <div className="w-16 h-16 border-2 border-black overflow-hidden bg-orange-100 relative">
-          <Image src={avatar} alt={name} fill className="object-cover" />
+        <div className="w-16 h-16 border-2 border-black overflow-hidden relative p-2 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+          <Image src={avatar} alt={name} fill unoptimized className="object-cover" />
         </div>
         <div>
-          <h4 className="font-bold text-lg leading-tight">{name}</h4>
-          <p className="text-blue-500 text-xs font-bold">{role}</p>
+          <h4 className="text-base leading-tight">{name}</h4>
+          <p className="text-blue-500 text-xs">{role}</p>
         </div>
       </div>
 
-      <div className="flex flex-wrap gap-2 mb-6 h-12 overflow-hidden">
+      <div className="flex flex-wrap gap-2 mb-6 overflow-hidden">
         {tags.map((tag) => (
           <span
             key={tag}
-            className="border border-black px-1.5 py-0.5 text-[9px] font-bold uppercase bg-gray-50"
+            className="border border-black px-1.5 py-0.5 text-[9px] font-bold bg-gray-50"
           >
             {tag}
           </span>
