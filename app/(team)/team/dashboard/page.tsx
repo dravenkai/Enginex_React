@@ -51,7 +51,7 @@ export default function TeamDashboardPage() {
         <nav className={styles.tabs} aria-label="Dashboard sections">
           <Link className={styles.activeTab} href="/team/dashboard">TEAM MEMBERS</Link>
           <Link href="/team/dashboard/large-projects">LARGE PROJECTS</Link>
-          <button type="button">RECRUIT ENGINEERS</button>
+          <Link href="/team/dashboard/recruit-engineers">RECRUIT ENGINEERS</Link>
         </nav>
 
         <section className={styles.teamSection}>

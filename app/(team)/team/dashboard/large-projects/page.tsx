@@ -45,7 +45,7 @@ export default function LargeProjectsPage() {
         <nav className={dashboard.tabs} aria-label="Dashboard sections">
           <Link href="/team/dashboard">TEAM MEMBERS</Link>
           <Link className={dashboard.activeTab} href="/team/dashboard/large-projects">LARGE PROJECTS</Link>
-          <button type="button">RECRUIT ENGINEERS</button>
+          <Link href="/team/dashboard/recruit-engineers">RECRUIT ENGINEERS</Link>
         </nav>
 
         <section className={styles.projectList} aria-label="Large projects">
