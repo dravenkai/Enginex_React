@@ -5,22 +5,30 @@ import { usePathname } from "next/navigation";
 import { Search, Bell } from "lucide-react";
 
 const HIDDEN_ON = ["/client/request"];
+const TITLES: Record<string, string> = {
+  "/client/profile": "ACCOUNT",
+};
 
 export default function Header() {
   const pathname = usePathname();
   if (HIDDEN_ON.includes(pathname)) return null;
+  const title = TITLES[pathname];
 
   return (
     <header className="h-20 bg-white border-b-4 border-black flex items-center justify-between px-8 sticky top-0 z-10">
       <div className="flex-1 max-w-xl">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-          <input
-            type="text"
-            placeholder="Search projects..."
-            className="w-1/2 pl-10 pr-4 py-1 border-2 border-black font-medium focus:outline-none focus:ring-2 focus:ring-black transition-all"
-          />
-        </div>
+        {title ? (
+          <h1 className="text-xl font-bold uppercase tracking-wide">{title}</h1>
+        ) : (
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Search projects..."
+              className="w-1/2 pl-10 pr-4 py-1 border-2 border-black font-medium focus:outline-none focus:ring-2 focus:ring-black transition-all"
+            />
+          </div>
+        )}
       </div>
 
       <div className="flex items-center gap-4">
