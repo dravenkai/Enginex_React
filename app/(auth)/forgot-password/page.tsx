@@ -7,10 +7,10 @@ import { useRouter } from "next/navigation";
 import { AlertCircle, KeyRound, LockKeyhole, Mail, RotateCcw, Send } from "lucide-react";
 import styles from "./reset.module.css";
 
-export default function ForgotPasswordPage() {
+export function ForgotPasswordForm({ initialError = false }: { initialError?: boolean }) {
   const router = useRouter();
   const [email, setEmail] = useState("");
-  const [error, setError] = useState(false);
+  const [error, setError] = useState(initialError);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -85,4 +85,8 @@ export default function ForgotPasswordPage() {
       </aside>
     </main>
   );
+}
+
+export default function ForgotPasswordPage() {
+  return <ForgotPasswordForm />;
 }
