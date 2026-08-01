@@ -1,7 +1,7 @@
-﻿﻿import WelcomeBanner from "../_components/WelcomeBanner";
-import StatusCard from "../_components/StatusCard";
-import RequestCard from "../_components/RequestCard";
-import EngineerCard from "../_components/EngineerCard";
+﻿﻿import WelcomeBanner from "./_components/WelcomeBanner";
+import StatusCard from "./_components/StatusCard";
+import RequestCard from "./_components/RequestCard";
+import EngineerCard from "./_components/EngineerCard";
 import { List, Star, ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function Page() {
@@ -86,7 +86,7 @@ export default function Page() {
             name="Chaint Chaint Chan"
             role="Architect"
             avatar="/profile.avif"
-            tags={["Archi", "Draw", "Build"]} 
+            tags={["Archi", "Draw", "Build"]}
           />
           <EngineerCard
             slug="Than Tun"
