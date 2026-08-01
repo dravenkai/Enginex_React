@@ -1,12 +1,20 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
+import { usePathname } from "next/navigation";
 import Sidebar, { type SidebarItem } from "./Sidebar";
 import styles from "./AppShell.module.css";
 
 export default function AppShell({ children }: { children: ReactNode }) {
+  const pathname = usePathname();
   const [renderedScreen, setRenderedScreen] =
     useState<SidebarItem>("Dashboard");
+
+  const isAuthPage = ["/login", "/register", "/sign-in", "/forgot-password"].some(
+    (route) => pathname === route || pathname.startsWith(`${route}/`),
+  );
+
+  if (isAuthPage) return children;
 
   return (
     <div className={styles.shell}>
