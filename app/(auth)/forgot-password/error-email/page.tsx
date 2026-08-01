@@ -20,7 +20,7 @@ export default async function EmailSentPage({
         </header>
         <div className={styles.card}>
           <div className={styles.successBadge} aria-hidden="true"><Check size={34} strokeWidth={3.2} /></div>
-          <h1 className={styles.title}>Check Your Email!</h1>
+          <h1 className={styles.title}>Reset Email Sent!</h1>
           <p className={styles.subtitle}>Reset link sent to:</p>
           <output className={styles.email}>{email}</output>
           <ul className={styles.instructions}>
