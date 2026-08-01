@@ -10,7 +10,7 @@ export default function AppShell({ children }: { children: ReactNode }) {
   const [renderedScreen, setRenderedScreen] =
     useState<SidebarItem>("Dashboard");
 
-  const isAuthPage = ["/login", "/register", "/forgot-password"].some(
+  const isAuthPage = ["/login", "/register", "/sign-in", "/forgot-password"].some(
     (route) => pathname === route || pathname.startsWith(`${route}/`),
   );
 
