@@ -13,6 +13,7 @@ export default function EngineerCard({
   slug,
   name,
   role,
+  
   avatar,
   tags,
 }: EngineerCardProps) {
