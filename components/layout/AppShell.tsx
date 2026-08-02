@@ -21,6 +21,7 @@ export default function AppShell({ children }: { children: ReactNode }) {
     "/client/dashboard/acc-indentity",
     "/client/dashboard/acc-identity",
     "/client/marketplace/assign-project",
+    "/engineer/profile",
   ].includes(pathname);
 
   if (isAuthPage || hasStandaloneShell) return children;
