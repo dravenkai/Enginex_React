@@ -40,7 +40,7 @@ export default function BrowseEngineersPage() {
       </nav>
     </header>
     <div className={styles.content}>
-      <nav className={styles.tabs} aria-label="Client account sections"><Link className={styles.activeTab} href="/client/browse-engineers">BROWSE ENGINEERS</Link><button type="button">MY PROJECTS</button><button type="button">CONTRACTS</button></nav>
+      <nav className={styles.tabs} aria-label="Client account sections"><Link className={styles.activeTab} href="/client/browse-engineers">BROWSE ENGINEERS</Link><Link href="/client/my-projects">MY PROJECTS</Link><button type="button">CONTRACTS</button></nav>
       <form className={styles.searchForm} onSubmit={submit}><div><Icon name="search"/><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search by name, field, or expertise..." aria-label="Search engineers"/></div><button type="submit">SEARCH</button></form>
       <section className={styles.grid} aria-label="Available engineers">
         {filtered.map((engineer) => <article className={styles.card} key={engineer.name}><div className={styles.cardTop}><div><h1>{engineer.name}</h1><p>{engineer.field}</p><span>{engineer.rating} • {engineer.projects} Projects</span></div><strong>{engineer.rate}</strong></div><button type="button">VIEW PROFILE &amp; HIRE</button></article>)}
