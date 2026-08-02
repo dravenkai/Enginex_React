@@ -14,7 +14,14 @@ export default function AppShell({ children }: { children: ReactNode }) {
     (route) => pathname === route || pathname.startsWith(`${route}/`),
   );
 
-  if (isAuthPage) return children;
+  const hasStandaloneShell = [
+    "/client/marketplace/marketplace-menu",
+    "/client/marketplace/marketplace-fav",
+    "/client/dashboard/manage-indentity",
+    "/client/dashboard/acc-indentity",
+  ].includes(pathname);
+
+  if (isAuthPage || hasStandaloneShell) return children;
 
   return (
     <div className={styles.shell}>
