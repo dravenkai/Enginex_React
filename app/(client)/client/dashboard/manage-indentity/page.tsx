@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { Bell, BellRing, Bold, ChevronRight, Heart, Italic, LayoutDashboard, Link as LinkIcon, List, Menu, Network, Settings, Settings2, ShieldCheck, Store, Trash2, UserRound, X } from "lucide-react";
 import { FormEvent, useState } from "react";
 import styles from "./manage-indentity.module.css";
@@ -17,7 +18,7 @@ export function ManageIdentityScreen({ accountMode = false }: { accountMode?: bo
 
   return <div className={styles.app}>
     <aside className={`${styles.sidebar} ${menuOpen ? styles.open : ""}`}>
-      <div className={styles.brandMark}><LayoutDashboard /></div><div className={styles.brand}><strong>ENGINEX</strong><span>Client Suite</span></div>
+      <div className={styles.brandHeader}><Image src="/enginex-logo.png" width={38} height={38} alt="Enginex" priority /><div className={styles.brand}><strong>Enginex</strong><span>Client Site</span></div></div>
       <button className={styles.close} onClick={() => setMenuOpen(false)} aria-label="Close menu"><X /></button>
       <nav><a href="/client/dashboard"><LayoutDashboard />Dashboard</a><a href="/client/marketplace/marketplace-menu"><Store />Marketplace</a><a href="/client/marketplace/marketplace-fav"><Heart />Favorites</a><a className={styles.active} href={accountMode ? "/client/dashboard/acc-indentity" : "/client/dashboard/manage-indentity"}><UserRound />Profile</a></nav>
       <button className={styles.newRequest}>New Request</button>

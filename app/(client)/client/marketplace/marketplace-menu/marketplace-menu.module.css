@@ -16,7 +16,7 @@
 .search input { width:100%; border:0; outline:0; background:transparent; font:14px "Courier New"; }
 .topActions { margin-left:auto; display:flex; align-items:center; gap:21px; }
 .topActions button,.menuButton { border:0; background:none; color:#2f6fa8; padding:3px; }
-.topActions svg { width:19px; }
+.topActions svg { width:19px; color:#2568b5; stroke:#2568b5; }
 .userAvatar { width:43px; height:43px; border:2px solid var(--ink); box-shadow:3px 3px 0 var(--ink); background:#252d2d; color:white; display:grid; place-items:center; font:700 12px Arial; }
 .content { padding:23px 20px 32px; }
 .intro h1 { margin:0 0 11px; font:900 30px/1 Arial,sans-serif; text-transform:uppercase; letter-spacing:-1px; }
@@ -37,7 +37,9 @@
 .portrait span { position:absolute; right:3px; bottom:2px; color:white; font:700 9px Arial; }
 .favorite { width:36px; height:36px; border:2px solid var(--ink); box-shadow:3px 3px 0 var(--ink); background:white; color:#466b8a; display:grid; place-items:center; cursor:pointer; }
 .favorite svg { width:20px; }
-.favoriteActive { color:#c51f2e; font-size:20px; line-height:1; }
+.favoriteActive { color:#2568b5; line-height:1; }
+.favoriteActive span { display:none; }
+.favoriteActive::before { content:""; display:block; width:20px; height:20px; background:center/contain no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%232568b5' stroke='%232568b5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z'/%3E%3C/svg%3E"); }
 .card h2 { margin:17px 0 5px; font:700 18px Arial,sans-serif; }
 .card h2 small { padding:3px 5px; border:1px solid #9d7d21; background:var(--yellow); font:8px "Courier New"; text-transform:uppercase; vertical-align:middle; }
 .card h2 .newBadge { background:#ee8d63; border-color:#a75232; }

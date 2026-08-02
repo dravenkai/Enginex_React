@@ -19,6 +19,7 @@ export default function AppShell({ children }: { children: ReactNode }) {
     "/client/marketplace/marketplace-fav",
     "/client/dashboard/manage-indentity",
     "/client/dashboard/acc-indentity",
+    "/client/dashboard/acc-identity",
     "/client/marketplace/assign-project",
   ].includes(pathname);
 
