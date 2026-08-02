@@ -13,7 +13,7 @@ type EngineerNavigationProps = {
 
 const links = [
   { key: "dashboard", label: "Dashboard", href: "/engineer/dashboard", icon: LayoutDashboard },
-  { key: "marketplace", label: "Marketplace", href: "/engineer/marketplace", icon: Store },
+  { key: "marketplace", label: "Marketplace", href: "/engineer/marketplace/new", icon: Store },
   { key: "projects", label: "My Projects", href: "/engineer/marketplace/new", icon: Mail },
   { key: "team", label: "Find Team", href: "/engineer/marketplace", icon: Search },
   { key: "profile", label: "Profile", href: "/engineer/profile/acc", icon: UserRound },
