@@ -24,6 +24,7 @@ export default function AppShell({ children }: { children: ReactNode }) {
     "/engineer/profile",
     "/engineer/profile/acc",
     "/engineer/profile/manage-identity",
+    "/engineer/dashboard",
   ].includes(pathname);
 
   if (isAuthPage || hasStandaloneShell) return children;
