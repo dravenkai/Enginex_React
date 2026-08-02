@@ -7,7 +7,7 @@ import styles from "./selfie-check.module.css";
 function Icon({ name }: { name: "camera" | "gear" | "back" }) {
   const paths = {
     camera: <><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="12" cy="13" r="4"/><path d="m8 6 2-3h4l2 3"/></>,
-    gear: <><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></>,
+    gear: <><path d="m12 2 2 2.1 2.8-.4.8 2.7 2.6 1.2-1.1 2.6 1.6 2.3-2.2 1.8.3 2.8-2.8.7-1.3 2.6-2.6-1.1-2.3 1.6-1.8-2.2-2.8.3-.7-2.8-2.6-1.3 1.1-2.6-1.6-2.3 2.2-1.8-.3-2.8 2.8-.7L10 4.1 12 2Z"/><path d="m8.5 12 2.2 2.2 4.8-4.8"/></>,
     back: <><path d="M20 12H5M10 6l-6 6 6 6"/></>,
   };
   return <svg aria-hidden="true" viewBox="0 0 24 24">{paths[name]}</svg>;
