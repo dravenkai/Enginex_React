@@ -1,0 +1,56 @@
+.app { --ink:#18191b; --blue:#78a4f7; --yellow:#ffe47b; min-height:100vh; background:#fbfbfb; color:var(--ink); font-family:"Courier New",monospace; }
+.sidebar { position:fixed; inset:0 auto 0 0; z-index:30; width:188px; border-right:3px solid var(--ink); background:#fbfbfb; display:flex; flex-direction:column; }
+.brand { height:91px; padding:23px 19px; border-bottom:3px solid var(--ink); box-sizing:border-box; display:flex; flex-direction:column; gap:4px; }
+.brand strong { font-family:Arial,sans-serif; font-size:20px; letter-spacing:-1px; }
+.brand span { font-size:13px; color:#5e6268; }
+.sidebar nav { padding:27px 7px; display:grid; gap:5px; }
+.sidebar nav a { height:44px; padding:0 10px; display:flex; align-items:center; gap:10px; color:#575b62; text-decoration:none; font-size:13px; box-sizing:border-box; }
+.sidebar nav svg { width:18px; }
+.sidebar nav .activeNav { border:2px solid var(--ink); background:var(--blue); box-shadow:4px 4px 0 var(--ink); color:#18396d; }
+.newRequest { margin:auto 20px 20px; height:36px; border:2px solid var(--ink); background:var(--blue); box-shadow:3px 3px 0 var(--ink); font:700 11px "Courier New"; text-transform:uppercase; display:flex; align-items:center; justify-content:center; gap:7px; }
+.newRequest svg { width:16px; }
+.main { margin-left:188px; min-width:0; }
+.topbar { height:93px; border-bottom:3px solid var(--ink); display:flex; align-items:center; padding:0 21px; box-sizing:border-box; }
+.search { width:268px; height:52px; display:flex; align-items:center; gap:14px; padding:0 13px; border:2px solid var(--ink); box-shadow:4px 4px 0 var(--ink); }
+.search svg { width:18px; flex:none; }
+.search input { width:100%; border:0; outline:0; background:transparent; font:14px "Courier New"; }
+.topActions { margin-left:auto; display:flex; align-items:center; gap:21px; }
+.topActions button,.menuButton { border:0; background:none; color:#376087; padding:3px; }
+.topActions svg { width:19px; }
+.userAvatar { width:43px; height:43px; border:2px solid var(--ink); box-shadow:3px 3px 0 var(--ink); background:#252d2d; color:white; display:grid; place-items:center; font:700 12px Arial; }
+.content { padding:23px 21px 32px; }
+.intro h1 { margin:0 0 11px; font:900 34px/1 Arial,sans-serif; text-transform:uppercase; letter-spacing:-1px; }
+.intro p { margin:0; color:#454950; font-size:15px; line-height:1.55; }
+.filters { margin-top:39px; display:flex; align-items:center; justify-content:space-between; gap:20px; }
+.categories { display:flex; gap:10px; flex-wrap:wrap; }
+.categories button,.moreFilters { min-height:32px; padding:0 14px; border:2px solid var(--ink); background:white; box-shadow:3px 3px 0 var(--ink); font:700 11px "Courier New"; text-transform:uppercase; cursor:pointer; }
+.categories button svg { width:12px; vertical-align:middle; }
+.categories .selectedFilter { background:var(--blue); color:#173b73; }
+.categories .available { margin-left:2px; background:var(--yellow); }
+.moreFilters { display:flex; align-items:center; gap:8px; white-space:nowrap; }
+.moreFilters svg { width:15px; }
+.grid { margin-top:42px; display:grid; grid-template-columns:repeat(3,minmax(220px,1fr)); gap:24px 22px; align-items:start; }
+.card { min-height:364px; padding:21px; border:3px solid var(--ink); box-shadow:7px 7px 0 var(--ink); background:white; box-sizing:border-box; display:flex; flex-direction:column; }
+.cardTop { display:flex; justify-content:space-between; align-items:flex-start; }
+.portrait { width:74px; height:74px; position:relative; border:3px solid var(--ink); box-shadow:3px 3px 0 var(--ink); background:linear-gradient(135deg,#dedede,#454545); overflow:hidden; display:grid; place-items:center; }
+.portrait svg { width:54px; height:54px; color:#181818; opacity:.75; }
+.portrait span { position:absolute; right:3px; bottom:2px; color:white; font:700 9px Arial; }
+.favorite { width:36px; height:36px; border:2px solid var(--ink); box-shadow:3px 3px 0 var(--ink); background:white; color:#466b8a; display:grid; place-items:center; cursor:pointer; }
+.favorite svg { width:20px; }
+.favoriteActive { color:#1d5ca5; }
+.card h2 { margin:21px 0 5px; font:700 20px Arial,sans-serif; }
+.card h2 small { padding:3px 5px; border:1px solid #9d7d21; background:var(--yellow); font:8px "Courier New"; text-transform:uppercase; vertical-align:middle; }
+.card h2 .newBadge { background:#ee8d63; border-color:#a75232; }
+.card > p { margin:0; color:#5c5e62; font-size:13px; }
+.tags { margin:23px 0; display:flex; flex-wrap:wrap; gap:5px; }
+.tags span { padding:4px 6px; border:1px solid #555; background:#efefef; font-size:9px; }
+.cardActions { margin-top:auto; padding-top:20px; border-top:2px solid #333; display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+.cardActions button { min-height:48px; border:2px solid var(--ink); box-shadow:4px 4px 0 var(--ink); background:white; font:700 11px/1.05 "Courier New"; text-transform:uppercase; cursor:pointer; }
+.cardActions button:first-child { background:var(--yellow); }
+.discover { width:min(378px,80%); height:69px; margin:68px auto 0; display:block; border:3px solid var(--ink); box-shadow:7px 7px 0 var(--ink); background:var(--blue); color:#17417e; font:700 18px Arial; text-transform:uppercase; }
+.empty { grid-column:1/-1; padding:50px; border:2px dashed #777; text-align:center; }
+.menuButton,.closeMenu,.backdrop { display:none; }
+.app button { color:inherit; }
+@media (max-width:900px) { .grid { grid-template-columns:repeat(2,minmax(220px,1fr)); } .filters { align-items:flex-start; } }
+@media (max-width:680px) { .sidebar { transform:translateX(-105%); transition:transform .2s ease; } .sidebarOpen { transform:translateX(0); } .main { margin-left:0; } .menuButton { display:block; margin-right:10px; } .closeMenu { display:block; position:absolute; right:8px; top:8px; border:0; background:none; } .backdrop { display:block; position:fixed; inset:0; z-index:20; border:0; background:#0006; } .topbar { height:76px; } .search { height:45px; flex:1; } .topActions { gap:8px; margin-left:10px; } .topActions button { display:none; } .content { padding:22px 16px; } .intro h1 { font-size:27px; } .filters { margin-top:28px; flex-direction:column; } .grid { margin-top:28px; grid-template-columns:1fr; } }
+@media (max-width:400px) { .userAvatar { display:none; } .card { padding:17px; } }

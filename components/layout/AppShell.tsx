@@ -14,7 +14,9 @@ export default function AppShell({ children }: { children: ReactNode }) {
     (route) => pathname === route || pathname.startsWith(`${route}/`),
   );
 
-  if (isAuthPage) return children;
+  const hasStandaloneShell = pathname === "/client/marketplace/marketplace-menu";
+
+  if (isAuthPage || hasStandaloneShell) return children;
 
   return (
     <div className={styles.shell}>
