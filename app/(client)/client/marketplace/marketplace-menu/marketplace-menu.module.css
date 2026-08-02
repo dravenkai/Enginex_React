@@ -15,7 +15,7 @@
 .search svg { width:18px; flex:none; }
 .search input { width:100%; border:0; outline:0; background:transparent; font:14px "Courier New"; }
 .topActions { margin-left:auto; display:flex; align-items:center; gap:21px; }
-.topActions button,.menuButton { border:0; background:none; color:#376087; padding:3px; }
+.topActions button,.menuButton { border:0; background:none; color:#2f6fa8; padding:3px; }
 .topActions svg { width:19px; }
 .userAvatar { width:43px; height:43px; border:2px solid var(--ink); box-shadow:3px 3px 0 var(--ink); background:#252d2d; color:white; display:grid; place-items:center; font:700 12px Arial; }
 .content { padding:23px 21px 32px; }
@@ -37,7 +37,7 @@
 .portrait span { position:absolute; right:3px; bottom:2px; color:white; font:700 9px Arial; }
 .favorite { width:36px; height:36px; border:2px solid var(--ink); box-shadow:3px 3px 0 var(--ink); background:white; color:#466b8a; display:grid; place-items:center; cursor:pointer; }
 .favorite svg { width:20px; }
-.favoriteActive { color:#1d5ca5; }
+.favoriteActive { color:#c51f2e; font-size:20px; line-height:1; }
 .card h2 { margin:21px 0 5px; font:700 20px Arial,sans-serif; }
 .card h2 small { padding:3px 5px; border:1px solid #9d7d21; background:var(--yellow); font:8px "Courier New"; text-transform:uppercase; vertical-align:middle; }
 .card h2 .newBadge { background:#ee8d63; border-color:#a75232; }

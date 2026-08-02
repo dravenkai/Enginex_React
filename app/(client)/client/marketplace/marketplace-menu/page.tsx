@@ -91,7 +91,7 @@ export default function MarketplaceMenuPage() {
                 <article className={styles.card} key={engineer.id}>
                   <div className={styles.cardTop}>
                     <div className={styles.portrait}><UserRound aria-hidden="true" /><span>{engineer.portrait}</span></div>
-                    <button className={`${styles.favorite} ${favorite ? styles.favoriteActive : ""}`} onClick={() => toggleFavorite(engineer.id)} aria-label={`${favorite ? "Remove" : "Add"} ${engineer.name} ${favorite ? "from" : "to"} favorites`}><Heart fill={favorite ? "currentColor" : "none"} /></button>
+                    <button className={`${styles.favorite} ${favorite ? styles.favoriteActive : ""}`} onClick={() => toggleFavorite(engineer.id)} aria-label={`${favorite ? "Remove" : "Add"} ${engineer.name} ${favorite ? "from" : "to"} favorites`}>{favorite ? <span aria-hidden="true">💔</span> : <Heart />}</button>
                   </div>
                   <h2>{engineer.name} {engineer.badge && <small className={engineer.badge === "New" ? styles.newBadge : ""}>{engineer.badge}</small>}</h2>
                   <p>{engineer.role}</p>

@@ -17,6 +17,8 @@ export default function AppShell({ children }: { children: ReactNode }) {
   const hasStandaloneShell = [
     "/client/marketplace/marketplace-menu",
     "/client/marketplace/marketplace-fav",
+    "/client/dashboard/manage-indentity",
+    "/client/dashboard/acc-indentity",
   ].includes(pathname);
 
   if (isAuthPage || hasStandaloneShell) return children;

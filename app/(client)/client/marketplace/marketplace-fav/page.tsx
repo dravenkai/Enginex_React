@@ -42,13 +42,13 @@ export default function MarketplaceFavoritesPage() {
 
       <main className={styles.content}>
         <div className={styles.toolbar}>
-          <div className={styles.tabs}>{(["All", "Solo", "Teams"] as Kind[]).map((item) => <button key={item} className={tab === item ? styles.selected : ""} onClick={() => setTab(item)}>{item} ({item === "All" ? items.length : items.filter((fav) => fav.kind === item).length})</button>)}</div>
+          <div className={styles.tabs}>{(["All", "Solo Engineers", "Teams"] as Kind[]).map((item) => <button key={item} className={tab === item ? styles.selected : ""} onClick={() => setTab(item)}>{item} ({item === "All" ? items.length : items.filter((fav) => fav.kind === item).length})</button>)}</div>
           <label className={styles.sort}>Sort by:<select value={sort} onChange={(event) => setSort(event.target.value)}><option>Recently Added</option><option>Rating</option><option>Name</option></select></label>
         </div>
 
         <section className={styles.grid} aria-live="polite">
           {visible.map((item) => <article className={styles.card} key={item.id}>
-            <div className={`${styles.cardArt} ${styles[item.art]}`}><span>{item.label}</span><button onClick={() => setItems((current) => current.filter((fav) => fav.id !== item.id))} aria-label={`Remove ${item.name} from favorites`}><Heart fill="currentColor" /></button><div className={styles.figure}><UserRound /></div></div>
+            <div className={`${styles.cardArt} ${styles[item.art]}`}><span>{item.label}</span><button onClick={() => setItems((current) => current.filter((fav) => fav.id !== item.id))} aria-label={`Remove ${item.name} from favorites`}><span aria-hidden="true">💔</span></button><div className={styles.figure}><UserRound /></div></div>
             <div className={styles.cardBody}><h2>{item.name}<span>★ <small>{item.rating.toFixed(1)}</small></span></h2><div className={styles.tags}>{item.tags.map((tag) => <span key={tag}>{tag}</span>)}</div><p>{item.copy}...</p>
               <div className={styles.actions}><button>Message</button><button aria-label={`Open ${item.name} details`}>{item.action === "calendar" ? <CalendarDays /> : item.action === "team" ? <UsersRound /> : <Zap />}</button></div>
             </div>
