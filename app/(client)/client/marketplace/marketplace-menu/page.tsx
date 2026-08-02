@@ -5,15 +5,12 @@ import {
   Check,
   Filter,
   Heart,
-  LayoutDashboard,
   Menu,
-  Plus,
   Search,
   Settings,
-  Store,
   UserRound,
-  X,
 } from "lucide-react";
+import ClientNavigation from "@/components/layout/ClientNavigation";
 import { useMemo, useState } from "react";
 import styles from "./marketplace-menu.module.css";
 
@@ -47,17 +44,7 @@ export default function MarketplaceMenuPage() {
 
   return (
     <div className={styles.app}>
-      <aside className={`${styles.sidebar} ${menuOpen ? styles.sidebarOpen : ""}`}>
-        <div className={styles.brand}><strong>ENGINEX</strong><span>Client Suite</span></div>
-        <button className={styles.closeMenu} onClick={() => setMenuOpen(false)} aria-label="Close menu"><X /></button>
-        <nav aria-label="Client navigation">
-          <a href="/client/dashboard"><LayoutDashboard />Dashboard</a>
-          <a className={styles.activeNav} href="/client/marketplace/marketplace-menu"><Store />Marketplace</a>
-          <a href="#favorites"><Heart />Favorites</a>
-          <a href="/client/profile"><UserRound />Profile</a>
-        </nav>
-        <button className={styles.newRequest}><Plus />New Request</button>
-      </aside>
+      <ClientNavigation active="marketplace" mobileOpen={menuOpen} onClose={() => setMenuOpen(false)} />
 
       <div className={styles.main}>
         <header className={styles.topbar}>
