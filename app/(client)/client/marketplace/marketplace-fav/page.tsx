@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { Bell, CalendarDays, Heart, LayoutDashboard, Menu, PlusCircle, Search, Settings, Store, UserRound, UsersRound, X, Zap } from "lucide-react";
 import { useMemo, useState } from "react";
 import styles from "./marketplace-fav.module.css";
@@ -26,7 +27,7 @@ export default function MarketplaceFavoritesPage() {
 
   return <div className={styles.app}>
     <aside className={`${styles.sidebar} ${menuOpen ? styles.open : ""}`}>
-      <div className={styles.brand}><strong>ENGINEX</strong><span>Client Suite</span></div>
+      <div className={styles.brand}><Image src="/enginex-logo.png" width={38} height={38} alt="Enginex" priority /><div><strong>Enginex</strong><span>Client Site</span></div></div>
       <button className={styles.close} onClick={() => setMenuOpen(false)} aria-label="Close menu"><X /></button>
       <nav><a href="/client/dashboard"><LayoutDashboard />Dashboard</a><a href="/client/marketplace/marketplace-menu"><Store />Marketplace</a><a className={styles.active} href="/client/marketplace/marketplace-fav"><Heart fill="currentColor" />Favorites</a><a href="/client/profile"><UserRound />Profile</a></nav>
       <button className={styles.newRequest}>New Request</button>

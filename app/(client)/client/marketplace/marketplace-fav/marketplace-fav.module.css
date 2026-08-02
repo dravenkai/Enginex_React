@@ -3,3 +3,5 @@
 .iconButton{color:#2f6fa8}
 @media(max-width:1000px){.grid{grid-template-columns:repeat(2,minmax(230px,1fr))}.search{width:190px}.header{gap:10px}}
 @media(max-width:700px){.sidebar{transform:translateX(-105%);transition:transform .2s}.sidebar.open{transform:translateX(0)}.main{margin-left:0}.menu{display:block;border:0;background:none}.close{display:block;position:absolute;top:10px;right:8px;border:0;background:none}.backdrop{display:block;position:fixed;inset:0;z-index:20;border:0;background:#0006}.header{height:80px;padding:0 14px}.header h1{font-size:17px}.search{height:44px;flex:1}.iconButton,.avatar{display:none}.content{padding:20px 14px}.toolbar{align-items:flex-start;flex-direction:column}.tabs{width:100%;overflow:auto}.tabs button{white-space:nowrap;padding:0 12px}.grid{margin-top:28px;grid-template-columns:1fr}.loadMore{width:min(300px,90%);margin-top:50px}}
+
+.brand{flex-direction:row;align-items:flex-start;gap:9px}.brand img{object-fit:contain}.brand>div{display:flex;flex-direction:column;gap:1px}.brand>div strong{font:800 17px Arial;text-transform:none}.brand>div span{font-size:9px;color:#555}
