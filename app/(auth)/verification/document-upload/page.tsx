@@ -22,7 +22,7 @@ export default function DocumentUploadPage() {
     <ol className={styles.steps}>
       <li className={styles.complete}><Link href="/verification"><span>01</span><strong>IDENTITY INFO</strong></Link></li>
       <li className={styles.active}><Link href="/verification/document-upload"><span>02</span><strong>DOCUMENT UPLOAD</strong></Link></li>
-      <li><button type="button"><span>03</span><strong>SELFIE CHECK</strong></button></li>
+      <li><Link href="/verification/selfie-check"><span>03</span><strong>SELFIE CHECK</strong></Link></li>
     </ol>
 
     <section className={styles.panel}>
