@@ -11,7 +11,7 @@
 .roleGroup{margin-bottom:clamp(6px,1.6vh,16px)}
 .roleClientBox{margin-top:2%}
 .roleLabel{display:block;font-size:clamp(10px,1.2vh,13px);font-weight:800;margin-bottom:clamp(3px,0.7vh,6px)}
-.roleRow{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.roleRow{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
 .roleButton{height:clamp(38px,5.6vh,52px);border:2px solid #222;border-radius:3px;background:#fff;font-size:clamp(12px,1.5vh,15px);font-weight:700;cursor:pointer;transition:background .15s;box-shadow:4px 4px #222}
 .roleButton:hover{background:#f2f1ed}
 .roleActive{background:#7ba2f2;box-shadow:4px 4px #222}

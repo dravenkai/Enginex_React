@@ -1,33 +1,106 @@
 "use client";
 
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import {
-  PenTool,
-  Ruler,
-  Calculator,
-  BookOpen,
-  Coffee,
-  Feather,
-  StickyNote,
-} from "lucide-react";
+import { Mouse } from "lucide-react";
+import { Baloo_2 } from "next/font/google";
+
+const baloo = Baloo_2({ subsets: ["latin"], weight: ["600", "700", "800"] });
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-const DESK_ITEMS = [
-  { id: "pencil-holder", Icon: PenTool, className: "top-[8%] left-[3%] sm:left-[8%]", rotate: -8, bg: "bg-[#fef08a]", outX: -70, outY: -30 },
-  { id: "ruler", Icon: Ruler, className: "top-[66%] left-[1%] sm:left-[4%]", rotate: -5, bg: "bg-[#93c5fd]", outX: -80, outY: 30 },
-  { id: "calculator", Icon: Calculator, className: "bottom-[6%] left-[14%] sm:left-[20%]", rotate: 7, bg: "bg-orange-300", outX: -40, outY: 60 },
-  { id: "notebook", Icon: BookOpen, className: "bottom-[4%] right-[14%] sm:right-[20%]", rotate: -4, bg: "bg-white", outX: 40, outY: 60 },
-  { id: "coffee-cup", Icon: Coffee, className: "top-[8%] right-[3%] sm:right-[8%]", rotate: 8, bg: "bg-orange-200", outX: 70, outY: -30 },
-  { id: "fountain-pen", Icon: Feather, className: "top-[58%] right-[1%] sm:right-[4%]", rotate: 10, bg: "bg-[#93c5fd]", outX: 80, outY: 30 },
-  { id: "sticky-note", Icon: StickyNote, className: "top-[0%] left-[38%]", rotate: -12, bg: "bg-[#fef08a]", outX: -20, outY: -70 },
-] as const;
+interface DeskItem {
+  id: string;
+  src: string;
+  className: string;
+  // Real width/height of the source PNG, so each item's box matches its
+  // actual shape instead of being squeezed/letterboxed into a square.
+  ratio: number;
+  rotate: number;
+  outX: number;
+  outY: number;
+}
+
+// Two ground clusters sitting on the desk, either side of the laptop —
+// left: lamp / pencil holder / calculator / notepad, right: coffee cup / pen / book.
+const DESK_ITEMS: DeskItem[] = [
+  {
+    id: "lamp",
+    src: "/hero/lamp.png",
+    className: "bottom-[18%] left-[-8%] sm:left-[-18%] w-34 sm:w-46 z-10",
+    ratio: 231 / 478,
+    rotate: 0,
+    outX: -80,
+    outY: 30,
+  },
+  {
+    id: "pencil-holder",
+    src: "/hero/pencil-holder.png",
+    className: "bottom-[20%] left-[2%] sm:left-[-4%] w-32 sm:w-40 z-10",
+    ratio: 273 / 422,
+    rotate: 0,
+    outX: -50,
+    outY: 55,
+  },
+  {
+    id: "calculator",
+    src: "/hero/calculator.png",
+    className: "bottom-[4%] left-[-2%] sm:left-[-8%] w-34 sm:w-42 z-20",
+    ratio: 299 / 208,
+    rotate: 6,
+    outX: -25,
+    outY: 70,
+  },
+  {
+    id: "notepad",
+    src: "/hero/notepad.png",
+    className: "bottom-[2%] left-[-8%] sm:left-[-18%] w-33 sm:w-40 z-20",
+    ratio: 268 / 370,
+    rotate: -4,
+    outX: -60,
+    outY: 65,
+  },
+  {
+    id: "coffee-cup",
+    src: "/hero/coffee-cup.png",
+    className: "top-[50%] right-[-4%] sm:right-[-16%] w-32 sm:w-40",
+    ratio: 226 / 212,
+    rotate: 0,
+    outX: 65,
+    outY: -40,
+  },
+  {
+    id: "pen",
+    src: "/hero/pen.png",
+    className: "top-[62%] right-[-8%] sm:right-[-10%] w-44 sm:w-56",
+    ratio: 260 / 154,
+    rotate: -5,
+    outX: 85,
+    outY: 15,
+  },
+  {
+    id: "book",
+    src: "/hero/book.png",
+    className: "bottom-[4%] right-[-8%] sm:right-[-20%] w-54 sm:w-74",
+    ratio: 350 / 289,
+    rotate: 5,
+    outX: 55,
+    outY: 60,
+  },
+];
+
+// The laptop screen sits roughly centered in its own image — used as the
+// transform-origin so scaling reads as "zooming into the laptop screen".
+const LAPTOP_ORIGIN = { xPct: 50, yPct: 42 };
+const LAPTOP_RATIO = 929 / 584;
 
 export default function Hero() {
+  const router = useRouter();
   const sectionRef = useRef<HTMLElement>(null);
   const bgRef = useRef<HTMLDivElement>(null);
   const laptopRef = useRef<HTMLDivElement>(null);
@@ -37,14 +110,18 @@ export default function Hero() {
 
   useEffect(() => {
     const section = sectionRef.current;
-    if (!section) return;
+    const laptop = laptopRef.current;
+    if (!section || !laptop) return;
 
     const ctx = gsap.context(() => {
       const items = itemRefs.current.filter(
         (el): el is HTMLDivElement => el !== null
       );
 
-      gsap.set([...items, laptopRef.current], { transformOrigin: "50% 50%" });
+      gsap.set(items, { transformOrigin: "50% 50%" });
+      gsap.set(laptop, { transformOrigin: `${LAPTOP_ORIGIN.xPct}% ${LAPTOP_ORIGIN.yPct}%` });
+
+      let navigating = false;
 
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -54,6 +131,19 @@ export default function Hero() {
           scrub: 1,
           pin: true,
           anticipatePin: 1,
+          // Once the zoom-into-the-laptop sequence finishes and the user keeps
+          // scrolling past it, dissolve the hero out and carry them into the hub
+          // instead of cutting to the next page instantly.
+          onLeave: () => {
+            if (navigating) return;
+            navigating = true;
+            gsap.to(section, {
+              opacity: 0,
+              duration: 0.4,
+              ease: "power1.in",
+              onComplete: () => router.push("/login"),
+            });
+          },
         },
       });
 
@@ -94,11 +184,7 @@ export default function Hero() {
           { scale: 1.15, opacity: 0.4, duration: 6, ease: "power1.inOut" },
           "zoom"
         )
-        .to(
-          laptopRef.current,
-          { scale: 3, duration: 6, ease: "power2.inOut" },
-          "zoom"
-        )
+        .to(laptop, { scale: 3, duration: 6, ease: "power2.inOut" }, "zoom")
         .to(
           headlineRef.current,
           { opacity: 0, y: -30, duration: 2, ease: "power1.in" },
@@ -117,70 +203,82 @@ export default function Hero() {
   return (
     <section
       ref={sectionRef}
-      className="relative h-screen w-full overflow-hidden bg-[#f7f5f0]"
+      className="relative h-screen w-screen overflow-hidden bg-[#f5f4f0]"
     >
-      <div
-        ref={bgRef}
-        className="absolute inset-0 will-change-transform"
-        style={{
-          backgroundImage:
-            "radial-gradient(ellipse at 15% 0%, rgba(255,255,255,0.9), transparent 55%), radial-gradient(ellipse at 85% 100%, rgba(0,0,0,0.06), transparent 60%), repeating-linear-gradient(70deg, transparent 0px, transparent 120px, rgba(0,0,0,0.04) 120px, rgba(0,0,0,0.04) 150px)",
-        }}
-      />
+      <div ref={bgRef} className="absolute inset-0 will-change-transform">
+        <Image
+          src="/hero/background.png"
+          alt=""
+          fill
+          priority
+          className="object-cover object-top"
+        />
+      </div>
 
-      <div className="absolute bottom-0 left-0 right-0 h-[52%] bg-gradient-to-b from-[#d7b98a] to-[#b98f5c]" />
+      <div className="absolute bottom-0 left-0 right-0 h-[36%] bg-gradient-to-b from-[#d7b98a] to-[#b98f5c]" />
 
-      <div className="relative h-full max-w-5xl mx-auto flex flex-col items-center justify-center gap-6 px-6">
+      <div className="relative h-full max-w-6xl mx-auto">
         {DESK_ITEMS.map((item, i) => (
           <div
             key={item.id}
             ref={(el) => {
               itemRefs.current[i] = el;
             }}
-            className={`absolute ${item.className} ${item.bg} border-4 border-black w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] will-change-transform`}
-            style={{ transform: `rotate(${item.rotate}deg)` }}
+            className={`absolute ${item.className} will-change-transform drop-shadow-lg`}
+            style={{ transform: `rotate(${item.rotate}deg)`, aspectRatio: item.ratio }}
           >
-            <item.Icon className="w-6 h-6 sm:w-7 sm:h-7" />
+            <Image
+              src={item.src}
+              alt=""
+              fill
+              sizes="220px"
+              className="object-contain"
+            />
           </div>
         ))}
 
-        <div
-          ref={headlineRef}
-          className="relative z-20 text-center max-w-2xl will-change-transform"
-        >
-          <h1 className="font-extrabold text-3xl sm:text-5xl leading-tight">
-            Hire the best, build with confidence.
-          </h1>
-          <p className="mt-4 text-base sm:text-lg font-medium text-gray-700">
-            A collaborative hub for builders to find teams &amp; for engineers
-            to land professional projects.
-          </p>
-        </div>
-
-        <div
-          ref={laptopRef}
-          className="relative z-10 will-change-transform"
-        >
-          <div className="bg-black p-2 pb-6 rounded-2xl shadow-2xl w-[260px] sm:w-[380px]">
-            <div className="bg-white border-2 border-black aspect-video flex flex-col items-center justify-center gap-2 px-4">
-              <p className="font-extrabold text-xl sm:text-3xl tracking-tight">
-                ENGINEX
-              </p>
-              <p className="text-[8px] sm:text-[10px] font-bold uppercase tracking-widest text-gray-500 text-center">
-                Engineering Community &amp; Construction Platform
-              </p>
-            </div>
+        <div className="relative h-full flex flex-col items-center px-4 pt-[5%] sm:pt-[6.5%]">
+          <div
+            ref={headlineRef}
+            className={`relative z-20 text-center will-change-transform ${baloo.className}`}
+          >
+            <h1 className="font-extrabold text-4xl sm:text-[68px] leading-tight text-black">
+              Hire the best, build with confidence.
+            </h1>
+            <p className="mt-4 pl-24 text-lg sm:text-[45px] font-bold text-gray-900">
+              A collaborative hub for builders to find teams &amp; for engineers
+              to land professional projects.
+            </p>
           </div>
-          <div className="mx-auto h-2.5 w-2/3 bg-black rounded-b-xl" />
-        </div>
 
-        <a
-          ref={ctaRef}
-          href="#how-it-works"
-          className="relative z-20 inline-flex items-center gap-2 bg-orange-400 border-4 border-black px-6 py-3 rounded-full font-bold shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-transform will-change-transform"
-        >
-          Scroll to enter the hub 💡
-        </a>
+          <a
+            ref={ctaRef}
+            href="#how-it-works"
+            onClick={(event) => {
+              event.preventDefault();
+              window.scrollBy({ top: window.innerHeight, behavior: "smooth" });
+            }}
+            className={`relative z-20 mt-5 inline-flex items-center gap-2 bg-orange-400 border-4 border-black px-6 py-3 rounded-full font-bold shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-transform will-change-transform cursor-pointer ${baloo.className}`}
+          >
+            Scroll to enter the hub.
+            <Mouse className="w-5 h-5 animate-bounce" strokeWidth={2.5} />
+          </a>
+
+          <div
+            ref={laptopRef}
+            className="relative z-10 mt-auto mb-[6%] sm:mb-[4%] w-[320px] sm:w-[540px] will-change-transform"
+            style={{ aspectRatio: LAPTOP_RATIO }}
+          >
+            <Image
+              src="/hero/laptop.png"
+              alt="Enginex — Engineering Community & Construction Platform"
+              fill
+              priority
+              sizes="540px"
+              className="object-contain"
+            />
+          </div>
+        </div>
       </div>
     </section>
   );

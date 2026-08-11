@@ -52,6 +52,7 @@ export default function RequestCard({
                   alt={engineerName ?? ""}
                   fill
                   unoptimized
+                  sizes="32px"
                   className="object-cover"
                 />
               </div>

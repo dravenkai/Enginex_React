@@ -1,28 +1,56 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import type { FormEvent } from "react";
 import styles from "./login.module.css";
 import { Icon } from "./visuals";
-import Image from "next/image";
+import { ApiError, login } from "@/lib/auth/api";
+import { dashboardPathForRole, useAuthStore } from "@/lib/auth/store";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default function LoginPage() {
+  const router = useRouter();
+  const setSession = useAuthStore((state) => state.setSession);
   const [showPassword, setShowPassword] = useState(false);
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [formError, setFormError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
-  function login(event: FormEvent<HTMLFormElement>) {
+  async function handleLogin(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    setFormError("");
 
     const form = event.currentTarget;
     const email = (form.elements.namedItem("email") as HTMLInputElement).value.trim();
     const password = (form.elements.namedItem("password") as HTMLInputElement).value;
 
-    setEmailError(EMAIL_PATTERN.test(email) ? "" : "Invalid email. Please try again.");
-    setPasswordError(password.length >= 8 ? "" : "Password must be at least 8 characters.");
+    const emailInvalid = !EMAIL_PATTERN.test(email);
+    const passwordInvalid = password.length < 8;
+    setEmailError(emailInvalid ? "Invalid email. Please try again." : "");
+    setPasswordError(passwordInvalid ? "Password must be at least 8 characters." : "");
+    if (emailInvalid || passwordInvalid) return;
+
+    setSubmitting(true);
+    try {
+      const { accessToken, user } = await login({ email, password });
+      setSession({ accessToken, user });
+      router.push(dashboardPathForRole(user.role));
+    } catch (error) {
+      if (error instanceof ApiError && error.status === 403) {
+        router.push(`/verify-email?email=${encodeURIComponent(email)}`);
+        return;
+      }
+      setFormError(
+        error instanceof ApiError ? error.message : "Something went wrong. Please try again."
+      );
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -34,7 +62,7 @@ export default function LoginPage() {
           <h2>Welcome Back!</h2>
           <p className={styles.subtitle}>Log in to access your engineering hub.</p>
 
-          <form onSubmit={login} noValidate>
+          <form onSubmit={handleLogin} noValidate>
             <label htmlFor="email">EMAIL ADDRESS</label>
             <div className={styles.inputBox}>
               <Icon type="mail" />
@@ -80,8 +108,17 @@ export default function LoginPage() {
               </div>
             )}
 
+            {formError && (
+              <div className={styles.error} role="alert">
+                <span aria-hidden="true">!</span>
+                {formError}
+              </div>
+            )}
+
             <Link className={styles.forgot} href="/forgot-password">Forgot password?</Link>
-            <button className={styles.loginButton} type="submit">ENTER HUB <Icon type="arrow" /></button>
+            <button className={styles.loginButton} type="submit" disabled={submitting}>
+              {submitting ? "SIGNING IN…" : "ENTER HUB"} <Icon type="arrow" />
+            </button>
             <div className={styles.or}><span>OR</span></div>
             <Link className={styles.registerButton} href="/register">CREATE NEW ACCOUNT</Link>
           </form>

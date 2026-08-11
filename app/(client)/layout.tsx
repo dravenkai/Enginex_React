@@ -1,26 +1,5 @@
-import { JetBrains_Mono } from "next/font/google";
-import Sidebar from "./client/dashboard/_components/Sidebar";
-import Header from "./client/dashboard/_components/Header";
+import ClientShell from "./client/dashboard/_components/ClientShell";
 
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  weight: ["400", "500", "700", "800"],
-});
-
-export default function RouteGroupLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return (
-    <div
-      className={`flex h-screen overflow-hidden bg-[#f3f4f6] ${jetbrainsMono.className}`}
-    >
-      <Sidebar />
-      <div className="flex-1 flex flex-col min-w-0">
-        <Header />
-        <main className="flex-1 overflow-auto min-w-0">{children}</main>
-      </div>
-    </div>
-  );
+export default function RouteGroupLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  return <ClientShell>{children}</ClientShell>;
 }

@@ -44,8 +44,8 @@ export default function RequestPage() {
   }
 
   return (
-    <div className="px-5 py-8 sm:px-8 lg:px-10 lg:py-9 xl:px-14">
-      <form onSubmit={handleSubmit} className="mx-auto max-w-[1100px]">
+    <div className="p-8">
+      <form onSubmit={handleSubmit} className="mx-auto max-w-[1400px]">
         <header className="mb-9 flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
           <div className="font-mono">
             <span className="inline-block border-2 border-zinc-900 bg-[#f4cf55] px-2 py-1 text-[10px] font-bold shadow-[2px_2px_0_#18181b]">SYSTEM INITIALIZATION</span>

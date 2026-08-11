@@ -1,8 +1,9 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { Icon, Logo } from "../login/visuals";
+import { Icon } from "../login/visuals";
 import styles from "../login/login.module.css";
 import errorStyles from "./wrong-email.module.css";
 
@@ -13,7 +14,7 @@ export default function WrongEmailLoginPage() {
     <main className={styles.page}>
       <section className={styles.left}>
         <div className={styles.content}>
-          <Logo />
+          <Image className={styles.logo} src="/enginex-logo.png" alt="Enginex logo" width={70} height={70} priority />
           <h1>ENGINEX</h1>
           <h2>Welcome Back!</h2>
           <p className={styles.subtitle}>Log in to access your engineering hub.</p>

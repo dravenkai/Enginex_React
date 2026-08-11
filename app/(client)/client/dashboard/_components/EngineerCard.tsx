@@ -21,7 +21,7 @@ export default function EngineerCard({
     <article className="bg-white border-4 border-black p-5 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex flex-col min-w-[255px]">
       <div className="flex items-center gap-4 mb-4">
         <div className="w-16 h-16 border-2 border-black overflow-hidden relative p-2 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-          <Image src={avatar} alt={name} fill unoptimized className="object-cover" />
+          <Image src={avatar} alt={name} fill unoptimized sizes="64px" className="object-cover" />
         </div>
         <div>
           <h4 className="text-base leading-tight">{name}</h4>
