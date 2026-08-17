@@ -1,10 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 
 // Proxies browser requests to the real Enginex backend. This exists so the
-// browser only ever talks to our own origin: the backend has no CORS headers
-// and is plain HTTP, so calling it directly from client code would be blocked
-// (CORS) or flagged (mixed content) depending on how this app is deployed.
-const BACKEND_API_URL = process.env.BACKEND_API_URL ?? "http://54.254.242.254/api";
+// browser only ever talks to our own origin.
+const BACKEND_API_URL = process.env.BACKEND_API_URL ?? "https://api.enginexmm.tech/api";
 
 async function forward(request: NextRequest, path: string[]) {
   const targetUrl = `${BACKEND_API_URL}/${path.join("/")}${request.nextUrl.search}`;
@@ -24,7 +22,15 @@ async function forward(request: NextRequest, path: string[]) {
     backendResponse = await fetch(targetUrl, {
       method: request.method,
       headers,
-      body: hasBody ? await request.text() : undefined,
+      // Stream the request body through unchanged instead of decoding it as
+      // text — .text() forces a UTF-8 round-trip that corrupts any binary
+      // body (multipart image uploads, raw image bytes), which broke every
+      // image endpoint (POST /images/*, POST /users/profile-image, POST
+      // /uploads/images) even though the browser sent the bytes correctly.
+      body: hasBody ? request.body : undefined,
+      // Node's fetch (undici) requires this whenever the body is a stream.
+      // @ts-expect-error - `duplex` isn't in the DOM RequestInit typings yet
+      duplex: hasBody ? "half" : undefined,
       redirect: "manual",
       cache: "no-store",
     });
@@ -35,8 +41,16 @@ async function forward(request: NextRequest, path: string[]) {
     );
   }
 
-  const responseBody = await backendResponse.text();
-  const response = new NextResponse(responseBody, {
+  // Same corruption risk on the way back — read as raw bytes, not text, so
+  // binary responses (e.g. GET /images/{resource}/{id} image bytes) survive
+  // the round-trip intact. Works fine for JSON/text responses too, since the
+  // consuming side (rawRequest) reads the proxied response back via .text().
+  const responseBody = await backendResponse.arrayBuffer();
+  // The Response constructor throws if given a body alongside a null-body
+  // status (204/205/304), even an empty one — which crashed every
+  // successful 204 (e.g. DELETE endpoints) into an uncaught 500 here.
+  const isNullBodyStatus = [204, 205, 304].includes(backendResponse.status);
+  const response = new NextResponse(isNullBodyStatus ? null : responseBody, {
     status: backendResponse.status,
     statusText: backendResponse.statusText,
   });

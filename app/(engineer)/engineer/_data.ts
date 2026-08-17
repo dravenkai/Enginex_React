@@ -1,4 +1,4 @@
-export type Category = "Software" | "Mechanical" | "Electrical";
+export type Category = "Civil" | "Architect" | "Mechanical" | "Electrical";
 
 export interface TechnicalChallenge {
   title: string;
@@ -133,7 +133,7 @@ export const projects: Project[] = [
     title: "Aerodynamics Simulation - V2",
     projectRef: "AeroTech Systems — Drone Airframe Revision",
     client: "AeroTech Systems",
-    category: "Software",
+    category: "Mechanical",
     year: "2023",
     tags: ["#CFD", "#Simulation", "#Aerospace"],
     image: "https://picsum.photos/seed/aerodynamics-sim/900/500",

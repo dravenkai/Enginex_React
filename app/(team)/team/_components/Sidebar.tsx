@@ -31,8 +31,17 @@ export default function Sidebar() {
 
   return (
     <div className="w-64 h-full flex-shrink-0 bg-white border-r-4 border-black flex flex-col">
-      <div className="p-6 border-black flex items-center gap-2">
-        <Image src="/enginex-logo.png" alt="Enginex logo" width={40} height={40} />
+      <div className="p-6
+      
+      
+      
+      
+      
+      
+      
+      
+      border-black flex items-center gap-2">
+        <Image src="/enginex-logo.png" alt="Enginex logo" width={40} height={40} priority />
         <div className="flex flex-col">
           <span className="font-bold text-xl leading-tight">Enginex</span>
           <span className="text-xs font-medium text-gray-500">Team Site</span>

@@ -1,15 +1,10 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import type { FormEvent } from "react";
 import {
-  Bold,
-  Italic,
-  List,
-  Link as LinkIcon,
   Settings2,
   ChevronRight,
   Trash2,
@@ -17,10 +12,14 @@ import {
   Network,
   ShieldCheck,
 } from "lucide-react";
-import { ApiError } from "@/lib/api/http";
+import AvatarImage from "@/components/AvatarImage";
+import { friendlyErrorMessage } from "@/lib/api/http";
 import { getClientProfile, updateClientProfile } from "@/lib/api/clients";
+import { uploadProfileImage, profileImageUrl } from "@/lib/api/profileImage";
 import { useApiResource } from "@/lib/api/useApiResource";
 import { useAuthStore } from "@/lib/auth/store";
+import { locationSelectOptions } from "@/lib/constants/locations";
+import { useMounted } from "@/lib/useMounted";
 
 const alertOptions = [
   {
@@ -44,10 +43,34 @@ export default function ProfileEditPage() {
   const router = useRouter();
   const user = useAuthStore((state) => state.user);
   const { data: profile, loading } = useApiResource(getClientProfile, []);
+  const mounted = useMounted();
 
   const [alerts, setAlerts] = useState({ projects: true, marketplace: true, community: false });
+  const [avatarVersion, setAvatarVersion] = useState(0);
+  const [avatarUploading, setAvatarUploading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState("");
+
+  async function handlePhotoChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file) return;
+    setSaveError("");
+    setAvatarUploading(true);
+    try {
+      // Dedicated profile-image endpoint (POST /users/profile-image) rather
+      // than the generic upload-then-PATCH-a-URL flow — it acts on the
+      // authenticated user directly and is served back through our own
+      // proxy (GET /users/{id}/profile-image), avoiding the private-bucket
+      // 403s the old avatarUrl-based photos ran into.
+      await uploadProfileImage(file);
+      setAvatarVersion((current) => current + 1);
+    } catch (error) {
+      setSaveError(friendlyErrorMessage(error, "Couldn't upload that photo. Please try again."));
+    } finally {
+      setAvatarUploading(false);
+    }
+  }
 
   async function handleSave(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -57,12 +80,13 @@ export default function ProfileEditPage() {
       const form = new FormData(event.currentTarget);
       const bio = String(form.get("bio") ?? "");
       const location = String(form.get("location") ?? "");
+      // No `name` field here — the live ClientProfile PUT schema doesn't
+      // accept one (confirmed against the OpenAPI contract), so a client's
+      // display name can't actually be changed from this form.
       await updateClientProfile({ bio, location });
       router.push("/client/profile");
     } catch (error) {
-      setSaveError(
-        error instanceof ApiError ? error.message : "Something went wrong. Please try again."
-      );
+      setSaveError(friendlyErrorMessage(error));
     } finally {
       setSaving(false);
     }
@@ -86,7 +110,7 @@ export default function ProfileEditPage() {
           </Link>
           <button
             type="submit"
-            disabled={saving || loading}
+            disabled={mounted && (saving || loading)}
             className="border-2 border-black bg-[#fef08a] hover:bg-[#f5e35a] px-5 py-2.5 text-xs font-bold uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-x-1 active:translate-y-1 active:shadow-none transition-all disabled:opacity-60"
           >
             {saving ? "Saving…" : "Save Changes"}
@@ -109,62 +133,68 @@ export default function ProfileEditPage() {
             <div className="flex flex-col sm:flex-row gap-8">
               <div className="shrink-0 flex flex-col items-center gap-2">
                 <div className="relative w-32 h-32 border-2 border-black overflow-hidden bg-[#93c5fd]">
-                  <Image
-                    src={profile?.avatarUrl || "/profile.avif"}
+                  <AvatarImage
+                    src={user?.id ? profileImageUrl(user.id, avatarVersion || undefined) : null}
+                    fallbackSrc="/profile.avif"
                     alt={user?.name ?? "Profile photo"}
                     fill
-                    unoptimized={Boolean(profile?.avatarUrl)}
                     sizes="128px"
                     className="object-cover"
                   />
                 </div>
-                <button
-                  type="button"
-                  className="text-[10px] font-bold uppercase underline hover:no-underline"
-                >
-                  Change Photo
-                </button>
+                <label className="text-[10px] font-bold uppercase underline hover:no-underline cursor-pointer">
+                  {avatarUploading ? "Uploading…" : "Change Photo"}
+                  <input
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp,image/gif"
+                    className="sr-only"
+                    disabled={avatarUploading}
+                    onChange={handlePhotoChange}
+                  />
+                </label>
               </div>
 
               <div className="flex-1 space-y-4">
                 <label className="block">
                   <span className="block text-xs font-bold uppercase mb-1">Full Name</span>
                   <input
-                    defaultValue={user?.name ?? ""}
-                    disabled
-                    title="Name is set at registration and isn't editable via this API yet."
+                    readOnly
+                    defaultValue={profile?.name ?? user?.name ?? ""}
                     className="w-full border-2 border-black bg-gray-100 px-3 py-2 text-sm font-medium text-gray-500"
                   />
+                  <span className="block text-[10px] text-gray-500 mt-1">
+                    Set when you registered — there&apos;s no self-service way to change it yet.
+                  </span>
                 </label>
                 <label className="block">
                   <span className="block text-xs font-bold uppercase mb-1">Location</span>
-                  <input
+                  <select
                     name="location"
                     defaultValue={profile?.location ?? ""}
-                    placeholder="City, Country"
-                    className="w-full border-2 border-black px-3 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-black"
-                  />
+                    className="w-full border-2 border-black px-3 py-2 text-sm font-medium bg-white focus:outline-none focus:ring-2 focus:ring-black"
+                  >
+                    <option value="" disabled>
+                      Select a location
+                    </option>
+                    {locationSelectOptions(profile?.location).map((location) => (
+                      <option key={location} value={location}>
+                        {location}
+                      </option>
+                    ))}
+                  </select>
                 </label>
               </div>
             </div>
 
             <label className="block mt-6">
               <span className="block text-xs font-bold uppercase mb-1">Professional Bio</span>
-              <div className="border-2 border-black">
-                <div className="flex items-center gap-3 px-3 py-2 border-b-2 border-black bg-gray-50 text-gray-500">
-                  <Bold className="w-4 h-4" />
-                  <Italic className="w-4 h-4" />
-                  <List className="w-4 h-4" />
-                  <LinkIcon className="w-4 h-4 ml-auto" />
-                </div>
-                <textarea
-                  rows={5}
-                  name="bio"
-                  defaultValue={profile?.bio ?? ""}
-                  placeholder="Tell engineers a bit about yourself or your company…"
-                  className="w-full p-3 text-sm leading-6 focus:outline-none resize-y"
-                />
-              </div>
+              <textarea
+                rows={5}
+                name="bio"
+                defaultValue={profile?.bio ?? ""}
+                placeholder="Tell engineers a bit about yourself or your company…"
+                className="w-full border-2 border-black p-3 text-sm leading-6 focus:outline-none focus:ring-2 focus:ring-black resize-y"
+              />
             </label>
           </section>
 
@@ -202,7 +232,7 @@ export default function ProfileEditPage() {
                   <span className="block text-xs font-bold uppercase mb-1">Email Address</span>
                   <input
                     readOnly
-                    defaultValue={user?.email ?? ""}
+                    defaultValue={profile?.email ?? user?.email ?? ""}
                     className="w-full border-2 border-black bg-gray-100 px-3 py-2 text-sm font-medium text-gray-500"
                   />
                 </label>

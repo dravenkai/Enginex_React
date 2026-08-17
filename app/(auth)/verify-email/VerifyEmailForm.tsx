@@ -6,7 +6,8 @@ import { useState } from "react";
 import type { FormEvent } from "react";
 import loginStyles from "../login/login.module.css";
 import { Icon } from "../login/visuals";
-import { ApiError, resendOtp, verifyEmail } from "@/lib/auth/api";
+import { resendOtp, verifyEmail } from "@/lib/auth/api";
+import { friendlyErrorMessage } from "@/lib/api/http";
 
 export default function VerifyEmailForm() {
   const router = useRouter();
@@ -33,9 +34,7 @@ export default function VerifyEmailForm() {
       await verifyEmail({ email: email.trim(), otp });
       router.push("/login");
     } catch (error) {
-      setFormError(
-        error instanceof ApiError ? error.message : "Something went wrong. Please try again."
-      );
+      setFormError(friendlyErrorMessage(error));
     } finally {
       setSubmitting(false);
     }
@@ -54,9 +53,7 @@ export default function VerifyEmailForm() {
       await resendOtp({ email: email.trim() });
       setNotice("A new code has been sent.");
     } catch (error) {
-      setFormError(
-        error instanceof ApiError ? error.message : "Something went wrong. Please try again."
-      );
+      setFormError(friendlyErrorMessage(error));
     } finally {
       setResending(false);
     }

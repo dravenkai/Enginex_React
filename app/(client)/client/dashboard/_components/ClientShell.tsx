@@ -1,11 +1,6 @@
-import { JetBrains_Mono } from "next/font/google";
+import { jetbrainsMono } from "@/lib/fonts";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  weight: ["400", "500", "700", "800"],
-});
 
 export default function ClientShell({ children }: { children: React.ReactNode }) {
   return (

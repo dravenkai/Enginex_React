@@ -8,6 +8,7 @@ import type { FormEvent } from "react";
 import styles from "./login.module.css";
 import { Icon } from "./visuals";
 import { ApiError, login } from "@/lib/auth/api";
+import { friendlyErrorMessage } from "@/lib/api/http";
 import { dashboardPathForRole, useAuthStore } from "@/lib/auth/store";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -30,10 +31,8 @@ export default function LoginPage() {
     const password = (form.elements.namedItem("password") as HTMLInputElement).value;
 
     const emailInvalid = !EMAIL_PATTERN.test(email);
-    const passwordInvalid = password.length < 8;
     setEmailError(emailInvalid ? "Invalid email. Please try again." : "");
-    setPasswordError(passwordInvalid ? "Password must be at least 8 characters." : "");
-    if (emailInvalid || passwordInvalid) return;
+    if (emailInvalid) return;
 
     setSubmitting(true);
     try {
@@ -45,9 +44,7 @@ export default function LoginPage() {
         router.push(`/verify-email?email=${encodeURIComponent(email)}`);
         return;
       }
-      setFormError(
-        error instanceof ApiError ? error.message : "Something went wrong. Please try again."
-      );
+      setFormError(friendlyErrorMessage(error));
     } finally {
       setSubmitting(false);
     }

@@ -1,11 +1,19 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import AvatarImage from "@/components/AvatarImage";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 import { Heart, RotateCw, Search } from "lucide-react";
-import { addFavorite, searchEngineers, type EngineerSearchResult } from "@/lib/api/clients";
+import {
+  addFavorite,
+  listFavorites,
+  removeFavorite,
+  searchEngineers,
+  type EngineerSearchResult,
+} from "@/lib/api/clients";
 import { useApiResource } from "@/lib/api/useApiResource";
+import { fallbackAvatar } from "@/lib/constants/avatars";
 
 type Filter = "All" | EngineerSearchResult["specialization"];
 
@@ -18,8 +26,12 @@ const filters: { value: Filter; label: string }[] = [
 ];
 
 export default function MarketplacePage() {
+  const searchParams = useSearchParams();
   const [filter, setFilter] = useState<Filter>("All");
-  const [query, setQuery] = useState("");
+  // Seeded from ?q= so the header's global search box (which links here) and
+  // this page's own search box stay in sync instead of being two disconnected
+  // search boxes on the same screen.
+  const [query, setQuery] = useState(() => searchParams.get("q") ?? "");
   const [saved, setSaved] = useState<number[]>([]);
 
   const {
@@ -29,22 +41,45 @@ export default function MarketplacePage() {
     reload,
   } = useApiResource(() => searchEngineers(query), [query]);
 
+  // Seed the heart state from the client's actual saved favorites, so
+  // already-favorited engineers show a filled heart on load instead of
+  // always starting blank.
+  useEffect(() => {
+    let cancelled = false;
+    listFavorites()
+      .then((favorites) => {
+        if (!cancelled) setSaved(favorites.map((entry) => entry.engineerProfileId));
+      })
+      .catch(() => {
+        // Best-effort — favorites will just show as unsaved if this fails.
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   const visible = useMemo(() => {
     const list = results ?? [];
     if (filter === "All") return list;
     return list.filter((engineer) => engineer.specialization === filter);
   }, [results, filter]);
 
-  async function toggleSaved(engineer: EngineerSearchResult) {
+  async function toggleFavorite(engineer: EngineerSearchResult) {
+    const isSaved = saved.includes(engineer.id);
     setSaved((current) =>
-      current.includes(engineer.id)
-        ? current.filter((id) => id !== engineer.id)
-        : [...current, engineer.id]
+      isSaved ? current.filter((id) => id !== engineer.id) : [...current, engineer.id]
     );
     try {
-      await addFavorite(engineer.id);
+      if (isSaved) {
+        await removeFavorite(engineer.id);
+      } else {
+        await addFavorite(engineer.id);
+      }
     } catch {
-      // Best-effort: the heart still toggles locally even if the save call fails.
+      // Revert the optimistic update if the call failed.
+      setSaved((current) =>
+        isSaved ? [...current, engineer.id] : current.filter((id) => id !== engineer.id)
+      );
     }
   }
 
@@ -89,7 +124,7 @@ export default function MarketplacePage() {
 
       {error && (
         <div className="bg-red-50 border-2 border-red-400 text-red-700 p-4 text-sm font-medium flex items-center justify-between gap-4">
-          <span>Couldn&apos;t load engineers from the server: {error}</span>
+          <span>Couldn&apos;t load engineers from the server.</span>
           <button
             type="button"
             onClick={reload}
@@ -110,21 +145,20 @@ export default function MarketplacePage() {
             <div className="p-6 flex-1">
               <div className="flex items-start justify-between mb-4">
                 <div className="relative w-24 h-24 border-2 border-black overflow-hidden bg-gray-100">
-                  <Image
-                    src={engineer.avatarUrl || "/profile.avif"}
+                  <AvatarImage
+                    src={engineer.avatarUrl}
+                    fallbackSrc={fallbackAvatar(engineer.id, engineer.name)}
                     alt={engineer.name ?? "Engineer"}
                     fill
-                    unoptimized={Boolean(engineer.avatarUrl)}
                     sizes="96px"
                     className="object-cover grayscale"
                   />
                 </div>
                 <button
                   type="button"
-                  onClick={() => toggleSaved(engineer)}
-                  aria-label={
-                    saved.includes(engineer.id) ? "Remove from favorites" : "Add to favorites"
-                  }
+                  onClick={() => toggleFavorite(engineer)}
+                  aria-label={saved.includes(engineer.id) ? "Remove from favorites" : "Add to favorites"}
+                  title={saved.includes(engineer.id) ? "Remove from favorites" : "Add to favorites"}
                   className="w-9 h-9 border-2 border-black hover:bg-gray-100 flex items-center justify-center shrink-0"
                 >
                   <Heart

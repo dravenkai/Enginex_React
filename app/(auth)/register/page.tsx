@@ -8,7 +8,8 @@ import type { FormEvent } from "react";
 import loginStyles from "../login/login.module.css";
 import styles from "./register.module.css";
 import { Icon } from "../login/visuals";
-import { ApiError, registerAccount, type Role } from "@/lib/auth/api";
+import { registerAccount, type Role } from "@/lib/auth/api";
+import { friendlyErrorMessage } from "@/lib/api/http";
 
 const roleOptions: { value: Role; label: string }[] = [
   { value: "CLIENT", label: "Client" },
@@ -44,9 +45,7 @@ export default function RegisterPage() {
       await registerAccount({ name, email, password, role });
       router.push(`/verify-email?email=${encodeURIComponent(email)}`);
     } catch (error) {
-      setFormError(
-        error instanceof ApiError ? error.message : "Something went wrong. Please try again."
-      );
+      setFormError(friendlyErrorMessage(error));
     } finally {
       setSubmitting(false);
     }

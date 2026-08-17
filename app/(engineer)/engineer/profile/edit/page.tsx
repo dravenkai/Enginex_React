@@ -1,26 +1,26 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
+import AvatarImage from "@/components/AvatarImage";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import type { FormEvent } from "react";
 import {
-  Bold,
-  Italic,
-  List,
-  Link as LinkIcon,
   Settings2,
   ChevronRight,
   Trash2,
   BellRing,
   Network,
-  FileUp,
 } from "lucide-react";
-import { ApiError } from "@/lib/api/http";
+import PortfolioPdfEditor from "@/components/PortfolioPdfEditor";
+import { friendlyErrorMessage } from "@/lib/api/http";
 import { getEngineerProfile, updateEngineerProfile } from "@/lib/api/engineers";
+import { uploadProfileImage, profileImageUrl } from "@/lib/api/profileImage";
 import { useApiResource } from "@/lib/api/useApiResource";
 import { useAuthStore } from "@/lib/auth/store";
+import { useMounted } from "@/lib/useMounted";
+import { locationSelectOptions } from "@/lib/constants/locations";
+import { fallbackAvatar } from "@/lib/constants/avatars";
 
 const alertOptions = [
   {
@@ -51,11 +51,32 @@ export default function EngineerProfileEditPage() {
   const router = useRouter();
   const user = useAuthStore((state) => state.user);
   const { data: profile, loading } = useApiResource(getEngineerProfile, []);
+  const mounted = useMounted();
 
   const [alerts, setAlerts] = useState({ projects: true, marketplace: true, community: false });
-  const [portfolioFile, setPortfolioFile] = useState<File | null>(null);
+  const [avatarVersion, setAvatarVersion] = useState(0);
+  const [avatarUploading, setAvatarUploading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState("");
+
+  async function handlePhotoChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file) return;
+    setSaveError("");
+    setAvatarUploading(true);
+    try {
+      // Dedicated profile-image endpoint (POST /users/profile-image) rather
+      // than the generic upload-then-PATCH-a-URL flow — see the comment in
+      // lib/api/profileImage.ts for why.
+      await uploadProfileImage(file);
+      setAvatarVersion((current) => current + 1);
+    } catch (error) {
+      setSaveError(friendlyErrorMessage(error, "Couldn't upload that photo. Please try again."));
+    } finally {
+      setAvatarUploading(false);
+    }
+  }
 
   async function handleSave(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -74,9 +95,7 @@ export default function EngineerProfileEditPage() {
       });
       router.push("/engineer/profile");
     } catch (error) {
-      setSaveError(
-        error instanceof ApiError ? error.message : "Something went wrong. Please try again."
-      );
+      setSaveError(friendlyErrorMessage(error));
     } finally {
       setSaving(false);
     }
@@ -100,7 +119,7 @@ export default function EngineerProfileEditPage() {
           </Link>
           <button
             type="submit"
-            disabled={saving || loading}
+            disabled={mounted && (saving || loading)}
             className="border-2 border-black bg-[#fef08a] hover:bg-[#f5e35a] px-5 py-2.5 text-xs font-bold uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-x-1 active:translate-y-1 active:shadow-none transition-all disabled:opacity-60"
           >
             {saving ? "Saving…" : "Save Changes"}
@@ -123,28 +142,32 @@ export default function EngineerProfileEditPage() {
             <div className="flex flex-col sm:flex-row gap-8">
               <div className="shrink-0 flex flex-col items-center gap-2">
                 <div className="relative w-32 h-32 border-2 border-black overflow-hidden bg-[#93c5fd]">
-                  <Image
-                    src={profile?.avatarUrl || profile?.profileImage || "/profile.avif"}
+                  <AvatarImage
+                    src={user?.id ? profileImageUrl(user.id, avatarVersion || undefined) : null}
+                    fallbackSrc={fallbackAvatar(profile?.id, profile?.name)}
                     alt={profile?.name ?? user?.name ?? "Profile photo"}
                     fill
-                    unoptimized={Boolean(profile?.avatarUrl || profile?.profileImage)}
                     sizes="128px"
                     className="object-cover"
                   />
                 </div>
-                <button
-                  type="button"
-                  className="text-[10px] font-bold uppercase underline hover:no-underline"
-                >
-                  Change Photo
-                </button>
+                <label className="text-[10px] font-bold uppercase underline hover:no-underline cursor-pointer">
+                  {avatarUploading ? "Uploading…" : "Change Photo"}
+                  <input
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp,image/gif"
+                    className="sr-only"
+                    disabled={avatarUploading}
+                    onChange={handlePhotoChange}
+                  />
+                </label>
               </div>
 
               <div className="flex-1 space-y-4">
                 <label className="block">
                   <span className="block text-xs font-bold uppercase mb-1">Full Name</span>
                   <input
-                    name="name"
+                    name="name" required
                     defaultValue={profile?.name ?? user?.name ?? ""}
                     className="w-full border-2 border-black px-3 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-black"
                   />
@@ -178,21 +201,13 @@ export default function EngineerProfileEditPage() {
 
             <label className="block mt-6">
               <span className="block text-xs font-bold uppercase mb-1">Professional Bio</span>
-              <div className="border-2 border-black">
-                <div className="flex items-center gap-3 px-3 py-2 border-b-2 border-black bg-gray-50 text-gray-500">
-                  <Bold className="w-4 h-4" />
-                  <Italic className="w-4 h-4" />
-                  <List className="w-4 h-4" />
-                  <LinkIcon className="w-4 h-4 ml-auto" />
-                </div>
-                <textarea
-                  rows={5}
-                  name="bio"
-                  defaultValue={profile?.bio ?? ""}
-                  placeholder="Specializing in..."
-                  className="w-full p-3 text-sm leading-6 focus:outline-none resize-y"
-                />
-              </div>
+              <textarea
+                rows={5}
+                name="bio"
+                defaultValue={profile?.bio ?? ""}
+                placeholder="Specializing in..." required
+                className="w-full border-2 border-black p-3 text-sm leading-6 focus:outline-none focus:ring-2 focus:ring-black resize-y"
+              />
             </label>
           </section>
 
@@ -239,12 +254,20 @@ export default function EngineerProfileEditPage() {
                 </label>
                 <label className="block">
                   <span className="block text-xs font-bold uppercase mb-1">Location</span>
-                  <input
+                  <select
                     name="location"
                     defaultValue={profile?.location ?? ""}
-                    placeholder="City, Country"
-                    className="w-full border-2 border-black px-3 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-black"
-                  />
+                    className="w-full border-2 border-black px-3 py-2 text-sm font-medium bg-white focus:outline-none focus:ring-2 focus:ring-black"
+                  >
+                    <option value="" disabled>
+                      Select a location
+                    </option>
+                    {locationSelectOptions(profile?.location).map((location) => (
+                      <option key={location} value={location}>
+                        {location}
+                      </option>
+                    ))}
+                  </select>
                 </label>
               </div>
             </section>
@@ -255,33 +278,21 @@ export default function EngineerProfileEditPage() {
           <section className="bg-white border-4 border-black p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
             <div className="flex items-center justify-between pb-3 mb-4 border-b-2 border-black">
               <h2 className="font-bold text-sm uppercase">Portfolio</h2>
-              <span className="text-[10px] font-bold text-gray-500">PDF (MAX 50MB)</span>
+              <span className="text-[10px] font-bold text-gray-500">PDF</span>
             </div>
-            <label className="flex flex-col items-center justify-center gap-2 border-2 border-dashed border-black bg-gray-50 hover:bg-gray-100 py-10 text-center cursor-pointer transition-colors">
-              <span className="w-10 h-10 border-2 border-black bg-black text-white flex items-center justify-center">
-                <FileUp className="w-5 h-5" />
-              </span>
-              {portfolioFile ? (
-                <span className="text-xs font-bold px-4">
-                  {portfolioFile.name}
-                  <span className="block text-gray-500 font-medium mt-0.5">
-                    ({Math.max(1, Math.round(portfolioFile.size / 1024 / 1024))} mb)
-                  </span>
-                </span>
-              ) : (
-                <span className="text-xs text-gray-500 px-4">
-                  Drag &amp; Drop Schematics
-                  <br />
-                  or click to browse local directory
-                </span>
-              )}
-              <input
-                type="file"
-                accept="application/pdf"
-                className="sr-only"
-                onChange={(event) => setPortfolioFile(event.target.files?.[0] ?? null)}
-              />
-            </label>
+            {profile?.id ? (
+              <>
+                <PortfolioPdfEditor />
+                <p className="mt-3 text-[10px] text-gray-500 leading-5">
+                  Attach a portfolio PDF (case studies, project write-ups) to your marketplace
+                  profile.
+                </p>
+              </>
+            ) : (
+              <p className="text-xs text-gray-500 border-2 border-dashed border-gray-300 p-6 text-center">
+                Loading your profile…
+              </p>
+            )}
           </section>
 
           <section className="bg-white border-4 border-black p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">

@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { CheckCircle2, Globe, RotateCw } from "lucide-react";
 import { getTeamProfile } from "@/lib/api/team";
 import { useApiResource } from "@/lib/api/useApiResource";
@@ -27,7 +28,7 @@ export default function TeamProfilePage() {
     <div className="p-8 max-w-[1600px] mx-auto space-y-8">
       {error && (
         <div className="bg-red-50 border-2 border-red-400 text-red-700 p-4 text-sm font-medium flex items-center justify-between gap-4">
-          <span>Couldn&apos;t load your team profile from the server: {error}</span>
+          <span>Couldn&apos;t load your team profile from the server.</span>
           <button
             type="button"
             onClick={reload}
@@ -53,7 +54,15 @@ export default function TeamProfilePage() {
               />
             </div>
             <div className="p-8">
-              <h1 className="text-4xl font-black">{profile?.companyName ?? "Your Company"}</h1>
+              <div className="flex items-start justify-between gap-4">
+                <h1 className="text-4xl font-black">{profile?.companyName ?? "Your Company"}</h1>
+                <Link
+                  href="/team/profile/edit"
+                  className="shrink-0 border-2 border-black bg-[#fef08a] hover:bg-[#f5e35a] px-4 py-2 text-xs font-bold uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-x-1 active:translate-y-1 active:shadow-none transition-all"
+                >
+                  Edit Profile
+                </Link>
+              </div>
               <p className="mt-3 text-gray-600 leading-6">
                 {profile?.description || "No description yet."}
               </p>

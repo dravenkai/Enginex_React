@@ -1,21 +1,44 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
+import AvatarImage from "@/components/AvatarImage";
 import { Search, RotateCw, Heart, Plus } from "lucide-react";
-import { listFavorites } from "@/lib/api/clients";
+import { listFavorites, removeFavorite } from "@/lib/api/clients";
+import { friendlyErrorMessage } from "@/lib/api/http";
 import { useApiResource } from "@/lib/api/useApiResource";
+import { fallbackAvatar } from "@/lib/constants/avatars";
 
 export default function FavoritesPage() {
   const [query, setQuery] = useState("");
   const { data: favorites, loading, error, reload } = useApiResource(listFavorites, []);
+  const [removingId, setRemovingId] = useState<number | null>(null);
+  const [removeError, setRemoveError] = useState("");
+
+  async function handleUnfavorite(engineerProfileId: number) {
+    setRemoveError("");
+    setRemovingId(engineerProfileId);
+    try {
+      await removeFavorite(engineerProfileId);
+      reload();
+    } catch (err) {
+      setRemoveError(friendlyErrorMessage(err, "Couldn't remove this favorite. Please try again."));
+    } finally {
+      setRemovingId(null);
+    }
+  }
 
   const visible = useMemo(() => {
     const list = favorites ?? [];
     const needle = query.trim().toLowerCase();
     if (!needle) return list;
-    return list.filter((entry) => (entry.engineer?.name ?? "").toLowerCase().includes(needle));
+    return list.filter((entry) =>
+      [entry.engineer?.name, entry.engineer?.specialization, entry.engineer?.location]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase()
+        .includes(needle)
+    );
   }, [favorites, query]);
 
   return (
@@ -41,7 +64,7 @@ export default function FavoritesPage() {
 
       {error && (
         <div className="bg-red-50 border-2 border-red-400 text-red-700 p-4 text-sm font-medium flex items-center justify-between gap-4">
-          <span>Couldn&apos;t load your favorites from the server: {error}</span>
+          <span>Couldn&apos;t load your favorites from the server.</span>
           <button
             type="button"
             onClick={reload}
@@ -52,6 +75,9 @@ export default function FavoritesPage() {
           </button>
         </div>
       )}
+      {removeError && (
+        <p className="text-sm font-medium text-red-700">{removeError}</p>
+      )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {visible.map((entry) => (
@@ -60,17 +86,24 @@ export default function FavoritesPage() {
             className="bg-white border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] flex flex-col"
           >
             <div className="relative aspect-[4/3] border-b-4 border-black bg-gray-100">
-              <Image
-                src={entry.engineer?.avatarUrl || "/profile.avif"}
+              <AvatarImage
+                src={entry.engineer?.avatarUrl}
+                fallbackSrc={fallbackAvatar(entry.engineerProfileId, entry.engineer?.name)}
                 alt={entry.engineer?.name ?? "Engineer"}
                 fill
-                unoptimized={Boolean(entry.engineer?.avatarUrl)}
                 sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                 className="object-cover"
               />
-              <span className="absolute top-3 right-3 w-8 h-8 border-2 border-black bg-white flex items-center justify-center">
+              <button
+                type="button"
+                onClick={() => handleUnfavorite(entry.engineerProfileId)}
+                disabled={removingId === entry.engineerProfileId}
+                aria-label="Remove from favorites"
+                title="Remove from favorites"
+                className="absolute top-3 right-3 w-8 h-8 border-2 border-black bg-white hover:bg-gray-100 flex items-center justify-center disabled:opacity-60"
+              >
                 <Heart className="w-4 h-4 fill-red-500 text-red-500" />
-              </span>
+              </button>
             </div>
 
             <div className="p-5 flex flex-col flex-1">
